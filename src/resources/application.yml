@@ -1,0 +1,11 @@
+db:
+  dsn: 'root:root@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=True&loc=Local'
+
+server:
+  engineMode: 'release'
+
+auth:
+  expireTime: 3600
+  ignorePath:
+    - POST - /sys/login
+    - GET - /sys/login
