@@ -5,7 +5,5 @@ server:
   engineMode: 'release'
 
 auth:
-  expireTime: 3600
   ignorePath:
     - POST - /sys/login
-    - GET - /sys/login

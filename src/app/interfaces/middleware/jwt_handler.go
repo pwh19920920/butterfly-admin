@@ -9,6 +9,11 @@ import (
 
 func JwtAuth(user *application.User, routeFor401 gin.HandlerFunc, routeFor403 gin.HandlerFunc) gin.HandlerFunc {
 	return func(context *gin.Context) {
+		// 404了，不处理
+		if context.FullPath() == "" {
+			return
+		}
+
 		// 如果地址被忽略
 		ignorePaths := user.GetIgnorePaths()
 		if ignorePaths != nil {

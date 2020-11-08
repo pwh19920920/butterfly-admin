@@ -40,6 +40,6 @@ func InitUserHandler(repository *persistence.Repository, authConfig *config.Auth
 
 	// 路由初始化
 	var route []server.RouteInfo
-	route = append(route, server.RouteInfo{HttpMethod: server.HttpGet, Path: "/login", HandlerFunc: handler.login})
+	route = append(route, server.RouteInfo{HttpMethod: server.HttpPost, Path: "/login", HandlerFunc: handler.login})
 	server.RegisterRoute("/sys", route)
 }
