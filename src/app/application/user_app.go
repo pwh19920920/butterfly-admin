@@ -7,8 +7,11 @@ import (
 	"butterfly-admin/src/app/infrastructure/persistence"
 	securityImpl "butterfly-admin/src/app/infrastructure/security"
 	"errors"
+	"fmt"
 	"github.com/google/uuid"
+	"github.com/pwh19920920/butterfly/helper"
 	"github.com/sirupsen/logrus"
+	"strings"
 )
 
 // 忽略的地址
@@ -31,7 +34,7 @@ func NewUser(repository *persistence.Repository, authConfig *config.AuthConfig) 
 }
 
 func (l *User) Login(username, password string) (ticket string, err error) {
-	user := l.repository.UserRepository.GetUser(username)
+	user := l.repository.UserRepository.GetByUsername(username)
 	if user == nil {
 		return "", errors.New("用户不存在")
 	}
@@ -85,5 +88,34 @@ func (l *User) GetIgnorePaths() *map[string]bool {
 
 // 检查并获取用户id
 func (l *User) CheckAndGetUserId(token string) (string, error) {
-	return l.jwtService.GetSubjectFromToken(token)
+	// 检查数据
+	typeIndex := strings.Index(token, fmt.Sprintf("%s ", l.authConfig.HeaderType))
+	if typeIndex != 0 {
+		return "", errors.New("token数据不正确")
+	}
+
+	// 取出票据id
+	token = helper.StringHelper.SubString(token, typeIndex+1, len(token))
+	relationId, err := l.jwtService.GetSubjectFromToken(token)
+	if err != nil {
+		return "", err
+	}
+
+	// 取出票据对象
+	ticket, err := l.repository.TokenRepository.GetByRelationId(relationId)
+	if err != nil {
+		return "", err
+	}
+
+	// 判断票据是否为空， 并校验
+	if ticket == nil {
+		return "", errors.New("token不存在")
+	}
+
+	if !l.jwtService.CheckToken(token, ticket.Secret) {
+		return "", errors.New("令牌校验失败")
+	}
+
+	// 校验成功，返回用户id
+	return string(ticket.UserId), nil
 }

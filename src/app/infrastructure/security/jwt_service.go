@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/pwh19920920/butterfly/helper"
 	"strings"
@@ -41,14 +40,6 @@ func (jwtService *JwtServiceImpl) GenericToken(secret, subject string) (string, 
 
 // 获取Subject
 func (jwtService *JwtServiceImpl) GetSubjectFromToken(token string) (string, error) {
-	// 检查数据
-	typeIndex := strings.Index(token, fmt.Sprintf("%s ", jwtService.authConfig.HeaderType))
-	if typeIndex != 0 {
-		return "", errors.New("token数据不正确")
-	}
-
-	// 基本数据判断
-	token = helper.StringHelper.SubString(token, typeIndex+1, len(token))
 	startIndexDot := strings.Index(token, ".")
 	lastIndexDot := strings.LastIndex(token, ".")
 	if startIndexDot == -1 || lastIndexDot == -1 || startIndexDot != lastIndexDot {
@@ -71,4 +62,13 @@ func (jwtService *JwtServiceImpl) GetSubjectFromToken(token string) (string, err
 
 	// 获取核心数据
 	return claims.Subject, nil
+}
+
+// 校验令牌
+func (jwtService *JwtServiceImpl) CheckToken(token, secret string) bool {
+	jwtSecret := []byte(secret)
+	tokenClaims, _ := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return jwtSecret, nil
+	})
+	return tokenClaims.Valid
 }
