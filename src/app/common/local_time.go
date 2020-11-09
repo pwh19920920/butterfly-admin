@@ -10,12 +10,18 @@ type LocalTime struct {
 	time.Time
 }
 
-func (t LocalTime) MarshalJSON() ([]byte, error) {
+func (t *LocalTime) MarshalJSON() ([]byte, error) {
 	formatted := fmt.Sprintf("\"%s\"", t.Format("2006-01-02 15:04:05"))
 	return []byte(formatted), nil
 }
 
-func (t LocalTime) Value() (driver.Value, error) {
+func (t *LocalTime) UnmarshalJSON(data []byte) error {
+	tt, _ := time.Parse(fmt.Sprintf("\"%s\"", "2006-01-02 15:04:05"), string(data))
+	*t = LocalTime{tt}
+	return nil
+}
+
+func (t *LocalTime) Value() (driver.Value, error) {
 	var zeroTime time.Time
 	if t.Time.UnixNano() == zeroTime.UnixNano() {
 		return nil, nil

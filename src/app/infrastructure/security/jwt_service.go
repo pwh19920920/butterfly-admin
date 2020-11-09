@@ -42,19 +42,19 @@ func (jwtService *JwtServiceImpl) GenericToken(secret, subject string) (string, 
 func (jwtService *JwtServiceImpl) GetSubjectFromToken(token string) (string, error) {
 	startIndexDot := strings.Index(token, ".")
 	lastIndexDot := strings.LastIndex(token, ".")
-	if startIndexDot == -1 || lastIndexDot == -1 || startIndexDot != lastIndexDot {
+	if startIndexDot == -1 || lastIndexDot == -1 || startIndexDot == lastIndexDot {
 		return "", errors.New("token数据不正确")
 	}
 
 	// base64数据解析
 	base64Str := helper.StringHelper.SubString(token, startIndexDot+1, lastIndexDot)
-	decoded, err := base64.StdEncoding.DecodeString(base64Str)
+	decoded, err := base64.RawStdEncoding.DecodeString(base64Str)
 	if err != nil {
 		return "", err
 	}
 
 	// 数据转json
-	var claims jwt.StandardClaims
+	var claims = jwt.StandardClaims{}
 	err = json.Unmarshal(decoded, &claims)
 	if err != nil {
 		return "", err

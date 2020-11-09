@@ -18,7 +18,7 @@ func (tokenRepository *TokenRepo) Save(token entity.Token) error {
 }
 
 func (tokenRepository *TokenRepo) Delete(relationId string) error {
-	return tokenRepository.db.Model(&entity.Token{}).Updates(&entity.Token{Deleted: true}).Error
+	return tokenRepository.db.Model(&entity.Token{}).Updates(&entity.Token{Deleted: 1}).Error
 }
 
 func (tokenRepository *TokenRepo) GetByRelationId(relationId string) (*entity.Token, error) {

@@ -87,35 +87,36 @@ func (l *User) GetIgnorePaths() *map[string]bool {
 }
 
 // 检查并获取用户id
-func (l *User) CheckAndGetUserId(token string) (string, error) {
+func (l *User) CheckAndGetToken(token string) (*entity.Token, error) {
 	// 检查数据
-	typeIndex := strings.Index(token, fmt.Sprintf("%s ", l.authConfig.HeaderType))
+	typeKey := fmt.Sprintf("%s ", l.authConfig.HeaderType)
+	typeIndex := strings.Index(token, typeKey)
 	if typeIndex != 0 {
-		return "", errors.New("token数据不正确")
+		return nil, errors.New("token数据不正确")
 	}
 
 	// 取出票据id
-	token = helper.StringHelper.SubString(token, typeIndex+1, len(token))
+	token = helper.StringHelper.SubString(token, len(typeKey), len(token))
 	relationId, err := l.jwtService.GetSubjectFromToken(token)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	// 取出票据对象
 	ticket, err := l.repository.TokenRepository.GetByRelationId(relationId)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	// 判断票据是否为空， 并校验
 	if ticket == nil {
-		return "", errors.New("token不存在")
+		return nil, errors.New("token不存在")
 	}
 
 	if !l.jwtService.CheckToken(token, ticket.Secret) {
-		return "", errors.New("令牌校验失败")
+		return nil, errors.New("令牌校验失败")
 	}
 
 	// 校验成功，返回用户id
-	return string(ticket.UserId), nil
+	return ticket, nil
 }

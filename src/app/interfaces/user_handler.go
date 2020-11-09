@@ -2,7 +2,9 @@ package interfaces
 
 import (
 	"butterfly-admin/src/app/application"
+	"butterfly-admin/src/app/common/constant"
 	"butterfly-admin/src/app/config"
+	"butterfly-admin/src/app/domain/entity"
 	"butterfly-admin/src/app/infrastructure/persistence"
 	"butterfly-admin/src/app/types"
 	"github.com/gin-gonic/gin"
@@ -32,6 +34,15 @@ func (userHandler *userHandler) login(context *gin.Context) {
 	response.BuildResponseSuccess(context, token)
 }
 
+func (userHandler *userHandler) logout(context *gin.Context) {
+	// 尝试获取ticket
+	dataStr := context.Request.Header.Get(constant.ContextUser)
+	token := entity.Token{}.UnMarshal(dataStr)
+
+	// 输出
+	response.BuildResponseSuccess(context, token)
+}
+
 // 加载路由
 func InitUserHandler(repository *persistence.Repository, authConfig *config.AuthConfig) {
 	// 组件初始化
@@ -41,5 +52,6 @@ func InitUserHandler(repository *persistence.Repository, authConfig *config.Auth
 	// 路由初始化
 	var route []server.RouteInfo
 	route = append(route, server.RouteInfo{HttpMethod: server.HttpPost, Path: "/login", HandlerFunc: handler.login})
+	route = append(route, server.RouteInfo{HttpMethod: server.HttpPost, Path: "/logout", HandlerFunc: handler.logout})
 	server.RegisterRoute("/sys", route)
 }
