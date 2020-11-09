@@ -33,6 +33,10 @@ func NewUser(repository *persistence.Repository, authConfig *config.AuthConfig) 
 	}
 }
 
+func (l *User) Logout(relationId string) error {
+	return l.repository.TokenRepository.Delete(relationId)
+}
+
 func (l *User) Login(username, password string) (ticket string, err error) {
 	user := l.repository.UserRepository.GetByUsername(username)
 	if user == nil {

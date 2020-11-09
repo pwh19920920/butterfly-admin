@@ -39,6 +39,9 @@ func (userHandler *userHandler) logout(context *gin.Context) {
 	dataStr := context.Request.Header.Get(constant.ContextUser)
 	token := entity.Token{}.UnMarshal(dataStr)
 
+	// 删除令牌
+	_ = userHandler.oauth.Logout(token.RelationId)
+
 	// 输出
 	response.BuildResponseSuccess(context, token)
 }
