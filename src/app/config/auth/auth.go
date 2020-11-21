@@ -12,7 +12,7 @@ type auth struct {
 
 var conf *auth
 
-func GetConf() *config.AuthConfig {
+func GetAuthConf() *config.AuthConfig {
 	if conf == nil {
 		// 默认配置
 		viper.SetDefault("auth.expireTime", 30*60)

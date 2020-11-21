@@ -12,15 +12,14 @@ import (
 )
 
 type JwtServiceImpl struct {
-	authConfig *config.AuthConfig
 }
 
-func NewJwtServiceImpl(authConfig *config.AuthConfig) *JwtServiceImpl {
-	return &JwtServiceImpl{authConfig}
+func NewJwtServiceImpl() *JwtServiceImpl {
+	return &JwtServiceImpl{}
 }
 
 // 生成令牌
-func (jwtService *JwtServiceImpl) GenericToken(secret, subject string) (string, error) {
+func (jwtService *JwtServiceImpl) GenericToken(authConfig *config.AuthConfig, secret, subject string) (string, error) {
 	jwtSecret := []byte(secret)
 
 	claims := jwt.StandardClaims{
@@ -28,7 +27,7 @@ func (jwtService *JwtServiceImpl) GenericToken(secret, subject string) (string, 
 		IssuedAt: time.Now().Unix(),
 
 		// 过期时间
-		ExpiresAt: time.Now().Add(time.Duration(jwtService.authConfig.ExpireTime) * time.Second).Unix(),
+		ExpiresAt: time.Now().Add(time.Duration(authConfig.ExpireTime) * time.Second).Unix(),
 
 		// Subject
 		Subject: subject,

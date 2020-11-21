@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func JwtAuth(user *application.User, routeFor401 gin.HandlerFunc, routeFor403 gin.HandlerFunc) gin.HandlerFunc {
+func JwtAuth(app *application.Application, routeFor401 gin.HandlerFunc, routeFor403 gin.HandlerFunc) gin.HandlerFunc {
 	return func(context *gin.Context) {
 		// 404了，不处理
 		if context.FullPath() == "" {
@@ -15,9 +15,10 @@ func JwtAuth(user *application.User, routeFor401 gin.HandlerFunc, routeFor403 gi
 		}
 
 		// 如果地址被忽略
-		ignorePaths := user.GetIgnorePaths()
+		urlFullKey := fmt.Sprintf("%s - %s", context.Request.Method, context.FullPath())
+		ignorePaths := app.User.GetIgnorePaths()
 		if ignorePaths != nil {
-			_, ok := (*ignorePaths)[fmt.Sprintf("%s - %s", context.Request.Method, context.FullPath())]
+			_, ok := (*ignorePaths)[urlFullKey]
 			if ok {
 				context.Next()
 				return
@@ -25,10 +26,19 @@ func JwtAuth(user *application.User, routeFor401 gin.HandlerFunc, routeFor403 gi
 		}
 
 		// 不被忽略则判断是否有令牌
-		token := context.GetHeader(user.GetHeaderName())
-		ticket, err := user.CheckAndGetToken(token)
+		token := context.GetHeader(app.User.GetHeaderName())
+		ticket, err := app.User.CheckAndGetTicket(token)
 		if err != nil {
 			routeFor401(context)
+			context.Abort()
+			return
+		}
+
+		// 特殊权限校验
+		specUserPermission := app.User.GetUserPermission(ticket.UserId)
+		_, ok := (*specUserPermission)[urlFullKey]
+		if !ok {
+			routeFor403(context)
 			context.Abort()
 			return
 		}

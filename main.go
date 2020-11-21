@@ -5,6 +5,7 @@ import (
 	"butterfly-admin/src/app/config/auth"
 	"butterfly-admin/src/app/config/database"
 	"butterfly-admin/src/app/infrastructure/persistence"
+	"butterfly-admin/src/app/infrastructure/security"
 	"butterfly-admin/src/app/interfaces"
 	"butterfly-admin/src/app/interfaces/middleware"
 	"github.com/gin-gonic/gin"
@@ -25,13 +26,19 @@ func init() {
 	// 初始化持久层
 	db := database.GetConn()
 	repository := persistence.NewRepository(db)
+	app := application.NewApplication(
+		repository,
+		security.NewEncodeServiceImpl(),
+		security.NewJwtServiceImpl(),
+		auth.GetAuthConf(),
+	)
 
 	// 初始化相关路由
-	interfaces.InitUserHandler(repository, auth.GetConf())
+	interfaces.InitUserHandler(app)
 
 	// 注册中间对象
 	server.RegisterMiddleware(middleware.JwtAuth(
-		application.NewUser(repository, auth.GetConf()),
+		app,
 		route401,
 		route403,
 	))
