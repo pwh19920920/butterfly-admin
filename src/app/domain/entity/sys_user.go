@@ -3,11 +3,11 @@ package entity
 import "butterfly-admin/src/app/common"
 
 type SysUser struct {
-	Id        uint64            `json:"id" gorm:"primary_key;AUTO_INCREMENT"`
-	CreatedAt *common.LocalTime `json:"createdAt" gorm:"index;column:created_at"`
-	UpdatedAt *common.LocalTime `json:"updatedAt" gorm:"column:updated_at"`
-	Username  string            `json:"updatedAt" gorm:"column:username"`
-	Password  string            `json:"updatedAt" gorm:"column:password"`
+	common.BaseEntity
+
+	Username string `json:"updatedAt" gorm:"column:username"` // 用户
+	Password string `json:"updatedAt" gorm:"column:password"` // 密码
+	Salt     string `json:"salt" gorm:"column:salt"`          // 密码盐
 }
 
 // TableName 会将 User 的表名重写为 `profiles`

@@ -12,8 +12,8 @@ func NewEncodeServiceImpl() *EncodeServiceImpl {
 	return &EncodeServiceImpl{}
 }
 
-func (enc *EncodeServiceImpl) Encode(text string) string {
-	return enc.MD5(enc.MD5(text))
+func (enc *EncodeServiceImpl) Encode(text, salt string) string {
+	return enc.MD5(enc.MD5(text+salt) + salt)
 }
 
 // 将[]byte转成16进制

@@ -38,7 +38,7 @@ func (l *SysUserApplication) Login(username, password string) (ticket string, er
 	}
 
 	// 检查密码
-	encPassword := l.encoderService.Encode(password)
+	encPassword := l.encoderService.Encode(password, user.Salt)
 	if encPassword != user.Password {
 		return "", errors.New("用户密码不正确")
 	}
