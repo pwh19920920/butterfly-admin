@@ -4,6 +4,7 @@ import (
 	"butterfly-admin/src/app/application"
 	"butterfly-admin/src/app/config/auth"
 	"butterfly-admin/src/app/config/database"
+	"butterfly-admin/src/app/config/sequence"
 	"butterfly-admin/src/app/infrastructure/persistence"
 	"butterfly-admin/src/app/infrastructure/security"
 	"butterfly-admin/src/app/interfaces"
@@ -25,8 +26,10 @@ func route403(context *gin.Context) {
 func init() {
 	// 初始化持久层
 	db := database.GetConn()
+	snowflake := sequence.GetSequence()
 	repository := persistence.NewRepository(db)
 	app := application.NewApplication(
+		snowflake,
 		repository,
 		security.NewEncodeServiceImpl(),
 		security.NewJwtServiceImpl(),
@@ -34,7 +37,7 @@ func init() {
 	)
 
 	// 初始化相关路由
-	interfaces.InitUserHandler(app)
+	interfaces.InitSysUserHandler(app)
 
 	// 注册中间对象
 	server.RegisterMiddleware(middleware.JwtAuth(

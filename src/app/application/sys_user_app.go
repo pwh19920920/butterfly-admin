@@ -7,6 +7,7 @@ import (
 	"butterfly-admin/src/app/infrastructure/persistence"
 	"errors"
 	"fmt"
+	"github.com/bwmarrin/snowflake"
 	"github.com/google/uuid"
 	"github.com/pwh19920920/butterfly/helper"
 	"github.com/sirupsen/logrus"
@@ -16,7 +17,8 @@ import (
 // 忽略的地址
 var ignorePathMap *map[string]bool
 
-type UserApplication struct {
+type SysUserApplication struct {
+	sequence       *snowflake.Node
 	repository     *persistence.Repository
 	encoderService security.EncodeService
 	jwtService     security.JwtService
@@ -24,12 +26,12 @@ type UserApplication struct {
 }
 
 // 退出
-func (l *UserApplication) Logout(relationId string) error {
+func (l *SysUserApplication) Logout(relationId string) error {
 	return l.repository.TokenRepository.Delete(relationId)
 }
 
 // 登陆
-func (l *UserApplication) Login(username, password string) (ticket string, err error) {
+func (l *SysUserApplication) Login(username, password string) (ticket string, err error) {
 	user := l.repository.UserRepository.GetByUsername(username)
 	if user == nil {
 		return "", errors.New("用户不存在")
@@ -46,12 +48,12 @@ func (l *UserApplication) Login(username, password string) (ticket string, err e
 }
 
 // 获取配置名称
-func (l *UserApplication) GetHeaderName() string {
+func (l *SysUserApplication) GetHeaderName() string {
 	return l.authConfig.HeaderName
 }
 
 // 检查并获取用户id
-func (l *UserApplication) CheckAndGetTicket(token string) (*entity.Token, error) {
+func (l *SysUserApplication) CheckAndGetTicket(token string) (*entity.SysToken, error) {
 	// 取出票据id
 	token, err := l.parseToken(token)
 	if err != nil {
@@ -83,7 +85,7 @@ func (l *UserApplication) CheckAndGetTicket(token string) (*entity.Token, error)
 }
 
 // 刷新令牌
-func (l *UserApplication) RefreshToken(userId uint64, relationId, token string) (string, error) {
+func (l *SysUserApplication) RefreshToken(userId uint64, relationId, token string) (string, error) {
 	// 取出票据id
 	token, err := l.parseToken(token)
 	if err != nil {
@@ -95,13 +97,13 @@ func (l *UserApplication) RefreshToken(userId uint64, relationId, token string) 
 }
 
 // 获取用户拥有的权限信息
-func (l *UserApplication) GetUserPermission(userId uint64) *map[string]bool {
+func (l *SysUserApplication) GetUserPermission(userId uint64) *map[string]bool {
 	specMap := make(map[string]bool)
 	return &specMap
 }
 
 // 获取忽略auth的地址
-func (l *UserApplication) GetIgnorePaths() *map[string]bool {
+func (l *SysUserApplication) GetIgnorePaths() *map[string]bool {
 	if ignorePathMap == nil {
 		dataMap := make(map[string]bool)
 		for _, v := range l.authConfig.IgnorePath {
@@ -113,7 +115,7 @@ func (l *UserApplication) GetIgnorePaths() *map[string]bool {
 }
 
 // 生成令牌
-func (l *UserApplication) genericToken(userId uint64) (string, error) {
+func (l *SysUserApplication) genericToken(userId uint64) (string, error) {
 	// 生成保存密钥
 	secret := uuid.New().String()
 	relationId := uuid.New().String()
@@ -122,7 +124,7 @@ func (l *UserApplication) genericToken(userId uint64) (string, error) {
 	// relationId -> userId
 	// relationId -> secret
 	// userId -> relationId
-	err := l.repository.TokenRepository.Save(entity.Token{
+	err := l.repository.TokenRepository.Save(entity.SysToken{
 		Secret:     secret,
 		RelationId: relationId,
 		UserId:     userId,
@@ -139,7 +141,7 @@ func (l *UserApplication) genericToken(userId uint64) (string, error) {
 }
 
 // 从header中解析令牌
-func (l *UserApplication) parseToken(token string) (string, error) {
+func (l *SysUserApplication) parseToken(token string) (string, error) {
 	// 检查数据
 	typeKey := fmt.Sprintf("%s ", l.authConfig.HeaderType)
 	typeIndex := strings.Index(token, typeKey)

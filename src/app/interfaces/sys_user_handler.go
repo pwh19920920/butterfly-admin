@@ -10,12 +10,12 @@ import (
 	"github.com/pwh19920920/butterfly/server"
 )
 
-type userHandler struct {
-	application *application.Application
+type sysUserHandler struct {
+	userApp application.SysUserApplication
 }
 
 // 登陆
-func (userHandler *userHandler) login(context *gin.Context) {
+func (userHandler *sysUserHandler) login(context *gin.Context) {
 	var form types.LoginForm
 	if context.ShouldBindJSON(&form) != nil {
 		response.BuildResponseBadRequest(context, "请求参数有误")
@@ -23,7 +23,7 @@ func (userHandler *userHandler) login(context *gin.Context) {
 	}
 
 	// option
-	token, err := userHandler.application.User.Login(form.Username, form.Password)
+	token, err := userHandler.userApp.Login(form.Username, form.Password)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "用户名或者密码错误")
 		return
@@ -34,43 +34,43 @@ func (userHandler *userHandler) login(context *gin.Context) {
 }
 
 // 退出
-func (userHandler *userHandler) logout(context *gin.Context) {
+func (userHandler *sysUserHandler) logout(context *gin.Context) {
 	// 尝试获取ticket
 	dataStr := context.Request.Header.Get(constant.ContextUser)
-	token := entity.Token{}.UnMarshal(dataStr)
+	token := entity.SysToken{}.UnMarshal(dataStr)
 
 	// 删除令牌
-	_ = userHandler.application.User.Logout(token.RelationId)
+	_ = userHandler.userApp.Logout(token.RelationId)
 
 	// 输出
 	response.BuildResponseSuccess(context, token)
 }
 
 // 刷新令牌
-func (userHandler *userHandler) refresh(context *gin.Context) {
+func (userHandler *sysUserHandler) refresh(context *gin.Context) {
 	// 尝试获取ticket
 	dataStr := context.Request.Header.Get(constant.ContextUser)
-	ticket := entity.Token{}.UnMarshal(dataStr)
+	ticket := entity.SysToken{}.UnMarshal(dataStr)
 
 	// 取令牌
-	token := context.GetHeader(userHandler.application.User.GetHeaderName())
-	newToken, err := userHandler.application.User.RefreshToken(ticket.UserId, ticket.RelationId, token)
+	token := context.GetHeader(userHandler.userApp.GetHeaderName())
+	newToken, err := userHandler.userApp.RefreshToken(ticket.UserId, ticket.RelationId, token)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "刷新令牌失败")
 		return
 	}
 
 	// 删除令牌
-	_ = userHandler.application.User.Logout(ticket.RelationId)
+	_ = userHandler.userApp.Logout(ticket.RelationId)
 
 	// 输出
 	response.BuildResponseSuccess(context, newToken)
 }
 
 // 加载路由
-func InitUserHandler(app *application.Application) {
+func InitSysUserHandler(app *application.Application) {
 	// 组件初始化
-	handler := userHandler{app}
+	handler := sysUserHandler{app.SysUser}
 
 	// 路由初始化
 	var route []server.RouteInfo

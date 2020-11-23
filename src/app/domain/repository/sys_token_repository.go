@@ -2,13 +2,13 @@ package repository
 
 import "butterfly-admin/src/app/domain/entity"
 
-type TokenRepository interface {
+type SysTokenRepository interface {
 	// 保存
-	Save(token entity.Token) error
+	Save(token entity.SysToken) error
 
 	// 删除
 	Delete(relationId string) error
 
 	// 查询
-	GetByRelationId(relationId string) (*entity.Token, error)
+	GetByRelationId(relationId string) (*entity.SysToken, error)
 }

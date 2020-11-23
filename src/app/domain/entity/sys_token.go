@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 )
 
-type Token struct {
+type SysToken struct {
 	Id         uint64            `json:"id" gorm:"primary_key;AUTO_INCREMENT"`
 	CreatedAt  *common.LocalTime `json:"createdAt" gorm:"index;column:created_at"`
 	UpdatedAt  *common.LocalTime `json:"updatedAt" gorm:"column:updated_at"`
@@ -16,19 +16,19 @@ type Token struct {
 }
 
 // TableName 会将 User 的表名重写为 `profiles`
-func (Token) TableName() string {
+func (SysToken) TableName() string {
 	return "t_sys_token"
 }
 
 // 序列化
-func (t Token) Marshal() string {
+func (t SysToken) Marshal() string {
 	data, _ := json.Marshal(t)
 	return string(data)
 }
 
 // 反序列化
-func (Token) UnMarshal(text string) *Token {
-	var token Token
+func (SysToken) UnMarshal(text string) *SysToken {
+	var token SysToken
 	_ = json.Unmarshal([]byte(text), &token)
 	return &token
 }

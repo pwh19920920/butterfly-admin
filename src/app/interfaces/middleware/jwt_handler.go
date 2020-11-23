@@ -16,7 +16,7 @@ func JwtAuth(app *application.Application, routeFor401 gin.HandlerFunc, routeFor
 
 		// 如果地址被忽略
 		urlFullKey := fmt.Sprintf("%s - %s", context.Request.Method, context.FullPath())
-		ignorePaths := app.User.GetIgnorePaths()
+		ignorePaths := app.SysUser.GetIgnorePaths()
 		if ignorePaths != nil {
 			_, ok := (*ignorePaths)[urlFullKey]
 			if ok {
@@ -26,8 +26,8 @@ func JwtAuth(app *application.Application, routeFor401 gin.HandlerFunc, routeFor
 		}
 
 		// 不被忽略则判断是否有令牌
-		token := context.GetHeader(app.User.GetHeaderName())
-		ticket, err := app.User.CheckAndGetTicket(token)
+		token := context.GetHeader(app.SysUser.GetHeaderName())
+		ticket, err := app.SysUser.CheckAndGetTicket(token)
 		if err != nil {
 			routeFor401(context)
 			context.Abort()
@@ -35,7 +35,7 @@ func JwtAuth(app *application.Application, routeFor401 gin.HandlerFunc, routeFor
 		}
 
 		// 特殊权限校验
-		specUserPermission := app.User.GetUserPermission(ticket.UserId)
+		specUserPermission := app.SysUser.GetUserPermission(ticket.UserId)
 		_, ok := (*specUserPermission)[urlFullKey]
 		if !ok {
 			routeFor403(context)
