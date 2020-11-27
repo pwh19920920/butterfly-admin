@@ -8,6 +8,7 @@ type SysUser struct {
 	Username string `json:"updatedAt" gorm:"column:username"` // 用户
 	Password string `json:"updatedAt" gorm:"column:password"` // 密码
 	Salt     string `json:"salt" gorm:"column:salt"`          // 密码盐
+	Deleted  int    `json:"deleted" gorm:"column:deleted"`    // 删除标记
 }
 
 // TableName 会将 User 的表名重写为 `profiles`

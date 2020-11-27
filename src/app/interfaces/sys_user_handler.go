@@ -40,7 +40,7 @@ func (userHandler *sysUserHandler) logout(context *gin.Context) {
 	token := entity.SysToken{}.UnMarshal(dataStr)
 
 	// 删除令牌
-	_ = userHandler.userApp.Logout(token.RelationId)
+	_ = userHandler.userApp.Logout(token.Subject)
 
 	// 输出
 	response.BuildResponseSuccess(context, token)
@@ -54,14 +54,14 @@ func (userHandler *sysUserHandler) refresh(context *gin.Context) {
 
 	// 取令牌
 	token := context.GetHeader(userHandler.userApp.GetHeaderName())
-	newToken, err := userHandler.userApp.RefreshToken(ticket.UserId, ticket.RelationId, token)
+	newToken, err := userHandler.userApp.RefreshToken(ticket.UserId, ticket.Subject, token)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "刷新令牌失败")
 		return
 	}
 
 	// 删除令牌
-	_ = userHandler.userApp.Logout(ticket.RelationId)
+	_ = userHandler.userApp.Logout(ticket.Subject)
 
 	// 输出
 	response.BuildResponseSuccess(context, newToken)

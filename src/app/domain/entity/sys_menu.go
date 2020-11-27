@@ -11,6 +11,8 @@ type SysMenu struct {
 	Component string `json:"component" gorm:"column:component"` // 菜单组件
 	Sort      string `json:"sort" gorm:"column:sort"`           // 菜单排序
 	Option    string `json:"option" gorm:"column:option"`       // 菜单操作
+	Parent    string `json:"parent" gorm:"column:parent"`       // 上级目录
+	Deleted   int    `json:"deleted" gorm:"column:deleted"`     // 删除标记
 }
 
 // TableName 会将 User 的表名重写为 `profiles`

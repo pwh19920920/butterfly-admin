@@ -6,15 +6,17 @@ import (
 )
 
 type Repository struct {
-	UserRepository  repository.SysUserRepository
-	TokenRepository repository.SysTokenRepository
-	db              *gorm.DB
+	SysUserRepository  repository.SysUserRepository
+	SysTokenRepository repository.SysTokenRepository
+	SysMenuRepository  repository.SysMenuRepository
+	db                 *gorm.DB
 }
 
 func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{
-		db:              db,
-		UserRepository:  NewSysUserRepositoryImpl(db),
-		TokenRepository: NewSysTokenRepositoryImpl(db),
+		db:                 db,
+		SysUserRepository:  NewSysUserRepositoryImpl(db),
+		SysTokenRepository: NewSysTokenRepositoryImpl(db),
+		SysMenuRepository:  NewSysMenuRepositoryImpl(db),
 	}
 }

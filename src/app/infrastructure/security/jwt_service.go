@@ -66,8 +66,8 @@ func (jwtService *JwtServiceImpl) GetSubjectFromToken(token string) (string, err
 // 校验令牌
 func (jwtService *JwtServiceImpl) CheckToken(token, secret string) bool {
 	jwtSecret := []byte(secret)
-	tokenClaims, _ := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+	tokenClaims, err := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
 	})
-	return tokenClaims.Valid
+	return err != nil && tokenClaims != nil && tokenClaims.Valid
 }

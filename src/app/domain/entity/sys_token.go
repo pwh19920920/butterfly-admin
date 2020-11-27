@@ -8,10 +8,10 @@ import (
 type SysToken struct {
 	common.BaseEntity
 
-	Secret     string `json:"secret" gorm:"column:secret"`          // 密钥
-	UserId     uint64 `json:"userId" gorm:"column:user_id"`         // 用户
-	RelationId string `json:"relationId" gorm:"column:relation_id"` // 关联id
-	Deleted    int    `json:"deleted" gorm:"column:deleted"`        // 删除标记
+	Secret  string `json:"secret" gorm:"column:secret"`   // 密钥
+	UserId  uint64 `json:"userId" gorm:"column:user_id"`  // 用户
+	Subject string `json:"subject" gorm:"column:subject"` // subject
+	Deleted int    `json:"deleted" gorm:"column:deleted"` // 删除标记
 }
 
 // TableName 会将 User 的表名重写为 `profiles`

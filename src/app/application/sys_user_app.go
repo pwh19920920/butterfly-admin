@@ -26,13 +26,13 @@ type SysUserApplication struct {
 }
 
 // 退出
-func (l *SysUserApplication) Logout(relationId string) error {
-	return l.repository.TokenRepository.Delete(relationId)
+func (l *SysUserApplication) Logout(subject string) error {
+	return l.repository.SysTokenRepository.Delete(subject)
 }
 
 // 登陆
 func (l *SysUserApplication) Login(username, password string) (ticket string, err error) {
-	user := l.repository.UserRepository.GetByUsername(username)
+	user := l.repository.SysUserRepository.GetByUsername(username)
 	if user == nil {
 		return "", errors.New("用户不存在")
 	}
@@ -60,13 +60,13 @@ func (l *SysUserApplication) CheckAndGetTicket(token string) (*entity.SysToken, 
 		return nil, errors.New("token数据不正确")
 	}
 
-	relationId, err := l.jwtService.GetSubjectFromToken(token)
+	subject, err := l.jwtService.GetSubjectFromToken(token)
 	if err != nil {
 		return nil, err
 	}
 
 	// 取出票据对象
-	ticket, err := l.repository.TokenRepository.GetByRelationId(relationId)
+	ticket, err := l.repository.SysTokenRepository.GetBySubject(subject)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +85,7 @@ func (l *SysUserApplication) CheckAndGetTicket(token string) (*entity.SysToken, 
 }
 
 // 刷新令牌
-func (l *SysUserApplication) RefreshToken(userId uint64, relationId, token string) (string, error) {
+func (l *SysUserApplication) RefreshToken(userId uint64, subject, token string) (string, error) {
 	// 取出票据id
 	token, err := l.parseToken(token)
 	if err != nil {
@@ -118,16 +118,16 @@ func (l *SysUserApplication) GetIgnorePaths() *map[string]bool {
 func (l *SysUserApplication) genericToken(userId uint64) (string, error) {
 	// 生成保存密钥
 	secret := uuid.New().String()
-	relationId := uuid.New().String()
+	subject := uuid.New().String()
 
 	// 保存用户信息与令牌之间的关系
-	// relationId -> userId
-	// relationId -> secret
-	// userId -> relationId
-	err := l.repository.TokenRepository.Save(entity.SysToken{
-		Secret:     secret,
-		RelationId: relationId,
-		UserId:     userId,
+	// subject -> userId
+	// subject -> secret
+	// userId -> subject
+	err := l.repository.SysTokenRepository.Save(entity.SysToken{
+		Secret:  secret,
+		Subject: subject,
+		UserId:  userId,
 	})
 
 	// 判定是否保存失败
@@ -137,7 +137,7 @@ func (l *SysUserApplication) genericToken(userId uint64) (string, error) {
 	}
 
 	// 生成令牌数据
-	return l.jwtService.GenericToken(l.authConfig, secret, relationId)
+	return l.jwtService.GenericToken(l.authConfig, secret, subject)
 }
 
 // 从header中解析令牌

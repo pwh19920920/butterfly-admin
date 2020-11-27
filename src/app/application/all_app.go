@@ -9,6 +9,7 @@ import (
 
 type Application struct {
 	SysUser SysUserApplication
+	SysMenu SysMenuApplication
 }
 
 func NewApplication(
@@ -19,12 +20,19 @@ func NewApplication(
 	authConfig *config.AuthConfig,
 ) *Application {
 	return &Application{
+		// 用户服务
 		SysUser: SysUserApplication{
 			sequence:       sequence,
 			repository:     repository,
 			encoderService: encoderService,
 			jwtService:     jwtService,
 			authConfig:     authConfig,
+		},
+
+		// 菜单服务
+		SysMenu: SysMenuApplication{
+			sequence:   sequence,
+			repository: repository,
 		},
 	}
 }
