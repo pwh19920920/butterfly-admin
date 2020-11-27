@@ -85,7 +85,7 @@ func (l *SysUserApplication) CheckAndGetTicket(token string) (*entity.SysToken, 
 }
 
 // 刷新令牌
-func (l *SysUserApplication) RefreshToken(userId uint64, subject, token string) (string, error) {
+func (l *SysUserApplication) RefreshToken(userId int64, subject, token string) (string, error) {
 	// 取出票据id
 	token, err := l.parseToken(token)
 	if err != nil {
@@ -97,7 +97,7 @@ func (l *SysUserApplication) RefreshToken(userId uint64, subject, token string) 
 }
 
 // 获取用户拥有的权限信息
-func (l *SysUserApplication) GetUserPermission(userId uint64) *map[string]bool {
+func (l *SysUserApplication) GetUserPermission(userId int64) *map[string]bool {
 	specMap := make(map[string]bool)
 	return &specMap
 }
@@ -115,7 +115,7 @@ func (l *SysUserApplication) GetIgnorePaths() *map[string]bool {
 }
 
 // 生成令牌
-func (l *SysUserApplication) genericToken(userId uint64) (string, error) {
+func (l *SysUserApplication) genericToken(userId int64) (string, error) {
 	// 生成保存密钥
 	secret := uuid.New().String()
 	subject := uuid.New().String()

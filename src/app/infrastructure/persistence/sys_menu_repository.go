@@ -16,25 +16,26 @@ func NewSysMenuRepositoryImpl(db *gorm.DB) *SysMenuRepositoryImpl {
 }
 
 // 保存
-func (s *SysMenuRepositoryImpl) Save(menu entity.SysMenu) error {
+func (s *SysMenuRepositoryImpl) Save(menu *entity.SysMenu) error {
 	return s.db.Model(&entity.SysMenu{}).Create(&menu).Error
 }
 
 // 更新
-func (s *SysMenuRepositoryImpl) UpdateById(id uint64, menu entity.SysMenu) error {
+func (s *SysMenuRepositoryImpl) UpdateById(id int64, menu *entity.SysMenu) error {
 	return s.db.Model(&entity.SysMenu{}).
 		Where(&entity.SysMenu{BaseEntity: common.BaseEntity{Id: id}}).Updates(&menu).Error
 }
 
 // 删除
-func (s *SysMenuRepositoryImpl) Delete(id uint64) error {
-	return s.db.Model(&entity.SysMenu{}).
+func (s *SysMenuRepositoryImpl) Delete(id int64) error {
+	err := s.db.Model(&entity.SysMenu{}).
 		Where(&entity.SysMenu{BaseEntity: common.BaseEntity{Id: id}}).
 		Updates(&entity.SysMenu{Deleted: 1}).Error
+	return err
 }
 
 // 查询分页
-func (s *SysMenuRepositoryImpl) Select(req types.SysMenuQueryRequest) (int64, []entity.SysMenu, error) {
+func (s *SysMenuRepositoryImpl) Select(req *types.SysMenuQueryRequest) (int64, []entity.SysMenu, error) {
 	var count int64 = 0
 	s.db.Model(&entity.SysMenu{}).Count(&count)
 

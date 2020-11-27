@@ -35,13 +35,13 @@ func JwtAuth(app *application.Application, routeFor401 gin.HandlerFunc, routeFor
 		}
 
 		// 特殊权限校验
-		specUserPermission := app.SysUser.GetUserPermission(ticket.UserId)
-		_, ok := (*specUserPermission)[urlFullKey]
-		if !ok {
-			routeFor403(context)
-			context.Abort()
-			return
-		}
+		//specUserPermission := app.SysUser.GetUserPermission(ticket.UserId)
+		//_, ok := (*specUserPermission)[urlFullKey]
+		//if !ok {
+		//	routeFor403(context)
+		//	context.Abort()
+		//	return
+		//}
 
 		// 设置用户的基本信息
 		context.Request.Header.Set(constant.ContextUser, ticket.Marshal())

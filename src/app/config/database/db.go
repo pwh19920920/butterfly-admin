@@ -30,6 +30,7 @@ func GetConn() *gorm.DB {
 	db, err := gorm.Open(mysql.Open(databaseConf.Db.Dsn), &gorm.Config{
 		SkipDefaultTransaction: true,
 	})
+
 	if err != nil || db == nil {
 		logrus.Panic("db connect open failure")
 		return nil

@@ -7,5 +7,5 @@ type SysUserRepository interface {
 	GetByUsername(username string) (user *entity.SysUser)
 
 	// 通过id获取用户
-	GetById(id uint64) (user *entity.SysUser)
+	GetById(id int64) (user *entity.SysUser)
 }

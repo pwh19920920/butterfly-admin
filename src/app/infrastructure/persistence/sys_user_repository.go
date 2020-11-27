@@ -19,7 +19,7 @@ func (userRepository *SysUserRepositoryImpl) GetByUsername(username string) *ent
 	return &user
 }
 
-func (userRepository *SysUserRepositoryImpl) GetById(id uint64) *entity.SysUser {
+func (userRepository *SysUserRepositoryImpl) GetById(id int64) *entity.SysUser {
 	var user entity.SysUser
 	userRepository.db.Model(&entity.SysUser{}).Where("id = ?", id).First(&user)
 	return &user

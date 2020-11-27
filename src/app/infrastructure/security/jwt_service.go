@@ -69,5 +69,5 @@ func (jwtService *JwtServiceImpl) CheckToken(token, secret string) bool {
 	tokenClaims, err := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
 	})
-	return err != nil && tokenClaims != nil && tokenClaims.Valid
+	return err == nil && tokenClaims != nil && tokenClaims.Valid
 }

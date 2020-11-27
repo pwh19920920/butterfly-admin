@@ -38,6 +38,7 @@ func init() {
 
 	// 初始化相关路由
 	interfaces.InitSysUserHandler(app)
+	interfaces.InitSysMenuHandler(app)
 
 	// 注册中间对象
 	server.RegisterMiddleware(middleware.JwtAuth(
