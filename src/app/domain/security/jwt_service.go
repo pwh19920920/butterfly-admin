@@ -1,7 +1,7 @@
 package security
 
 import (
-	"butterfly-admin/src/app/config/auth"
+	"github.com/pwh19920920/butterfly-admin/src/app/config/auth"
 )
 
 type TokenService interface {

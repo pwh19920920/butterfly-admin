@@ -1,6 +1,6 @@
 package entity
 
-import "butterfly-admin/src/app/common"
+import "github.com/pwh19920920/butterfly-admin/src/app/common"
 
 type SysMenu struct {
 	common.BaseEntity

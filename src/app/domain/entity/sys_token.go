@@ -1,8 +1,8 @@
 package entity
 
 import (
-	"butterfly-admin/src/app/common"
 	"encoding/json"
+	"github.com/pwh19920920/butterfly-admin/src/app/common"
 )
 
 type SysToken struct {

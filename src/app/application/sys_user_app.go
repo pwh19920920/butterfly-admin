@@ -1,13 +1,13 @@
 package application
 
 import (
-	"butterfly-admin/src/app/config/auth"
-	"butterfly-admin/src/app/domain/entity"
-	"butterfly-admin/src/app/domain/security"
-	"butterfly-admin/src/app/infrastructure/persistence"
-	"butterfly-admin/src/app/types"
 	"github.com/bwmarrin/snowflake"
 	"github.com/go-basic/uuid"
+	"github.com/pwh19920920/butterfly-admin/src/app/config/auth"
+	"github.com/pwh19920920/butterfly-admin/src/app/domain/entity"
+	"github.com/pwh19920920/butterfly-admin/src/app/domain/security"
+	"github.com/pwh19920920/butterfly-admin/src/app/infrastructure/persistence"
+	"github.com/pwh19920920/butterfly-admin/src/app/types"
 	"github.com/sirupsen/logrus"
 	"strings"
 )

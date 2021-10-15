@@ -1,11 +1,11 @@
 package security
 
 import (
-	"butterfly-admin/src/app/config/auth"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/pwh19920920/butterfly-admin/src/app/config/auth"
 	"github.com/pwh19920920/butterfly/helper"
 	"strings"
 	"time"

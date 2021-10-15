@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"butterfly-admin/src/app/domain/entity"
-	"butterfly-admin/src/app/types"
+	"github.com/pwh19920920/butterfly-admin/src/app/domain/entity"
+	"github.com/pwh19920920/butterfly-admin/src/app/types"
 )
 
 type SysRoleRepository interface {

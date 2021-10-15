@@ -1,9 +1,9 @@
 package interfaces
 
 import (
-	"butterfly-admin/src/app/application"
-	"butterfly-admin/src/app/types"
 	"github.com/gin-gonic/gin"
+	"github.com/pwh19920920/butterfly-admin/src/app/application"
+	"github.com/pwh19920920/butterfly-admin/src/app/types"
 	"github.com/pwh19920920/butterfly/response"
 	"github.com/pwh19920920/butterfly/server"
 	"strconv"

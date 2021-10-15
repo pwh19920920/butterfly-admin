@@ -1,12 +1,12 @@
 package interfaces
 
 import (
-	"butterfly-admin/src/app/application"
-	"butterfly-admin/src/app/common/constant"
-	"butterfly-admin/src/app/domain/entity"
-	"butterfly-admin/src/app/types"
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/pwh19920920/butterfly-admin/src/app/application"
+	"github.com/pwh19920920/butterfly-admin/src/app/common/constant"
+	"github.com/pwh19920920/butterfly-admin/src/app/domain/entity"
+	"github.com/pwh19920920/butterfly-admin/src/app/types"
 	"github.com/pwh19920920/butterfly/response"
 	"github.com/pwh19920920/butterfly/server"
 )

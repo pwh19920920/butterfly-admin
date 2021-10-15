@@ -1,11 +1,11 @@
 package application
 
 import (
-	"butterfly-admin/src/app/config/sequence"
-	"butterfly-admin/src/app/domain/entity"
-	"butterfly-admin/src/app/infrastructure/persistence"
-	"butterfly-admin/src/app/types"
 	"github.com/bwmarrin/snowflake"
+	"github.com/pwh19920920/butterfly-admin/src/app/config/sequence"
+	"github.com/pwh19920920/butterfly-admin/src/app/domain/entity"
+	"github.com/pwh19920920/butterfly-admin/src/app/infrastructure/persistence"
+	"github.com/pwh19920920/butterfly-admin/src/app/types"
 	"github.com/sirupsen/logrus"
 	"strings"
 )

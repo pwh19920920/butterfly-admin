@@ -1,13 +1,13 @@
 package starter
 
 import (
-	"butterfly-admin/src/app/application"
-	"butterfly-admin/src/app/config"
-	"butterfly-admin/src/app/infrastructure/persistence"
-	"butterfly-admin/src/app/infrastructure/security"
-	"butterfly-admin/src/app/interfaces"
-	"butterfly-admin/src/app/interfaces/middleware"
 	"github.com/gin-gonic/gin"
+	"github.com/pwh19920920/butterfly-admin/src/app/application"
+	"github.com/pwh19920920/butterfly-admin/src/app/config"
+	"github.com/pwh19920920/butterfly-admin/src/app/infrastructure/persistence"
+	"github.com/pwh19920920/butterfly-admin/src/app/infrastructure/security"
+	"github.com/pwh19920920/butterfly-admin/src/app/interfaces"
+	"github.com/pwh19920920/butterfly-admin/src/app/interfaces/middleware"
 	"github.com/pwh19920920/butterfly/response"
 	"github.com/pwh19920920/butterfly/server"
 )

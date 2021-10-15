@@ -1,7 +1,7 @@
 package types
 
 import (
-	"butterfly-admin/src/app/domain/entity"
+	"github.com/pwh19920920/butterfly-admin/src/app/domain/entity"
 	"github.com/pwh19920920/butterfly/response"
 )
 

@@ -1,4 +1,4 @@
-module butterfly-admin
+module github.com/pwh19920920/butterfly-admin
 
 go 1.13
 

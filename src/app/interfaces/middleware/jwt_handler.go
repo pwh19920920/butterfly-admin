@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"butterfly-admin/src/app/application"
-	"butterfly-admin/src/app/common/constant"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/pwh19920920/butterfly-admin/src/app/application"
+	"github.com/pwh19920920/butterfly-admin/src/app/common/constant"
 	"strings"
 )
 

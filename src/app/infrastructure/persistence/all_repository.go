@@ -1,8 +1,8 @@
 package persistence
 
 import (
-	"butterfly-admin/src/app/config"
-	"butterfly-admin/src/app/domain/repository"
+	"github.com/pwh19920920/butterfly-admin/src/app/config"
+	"github.com/pwh19920920/butterfly-admin/src/app/domain/repository"
 )
 
 type Repository struct {

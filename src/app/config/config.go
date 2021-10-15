@@ -1,10 +1,10 @@
 package config
 
 import (
-	"butterfly-admin/src/app/config/auth"
-	"butterfly-admin/src/app/config/database"
-	"butterfly-admin/src/app/config/sequence"
 	"github.com/bwmarrin/snowflake"
+	"github.com/pwh19920920/butterfly-admin/src/app/config/auth"
+	"github.com/pwh19920920/butterfly-admin/src/app/config/database"
+	"github.com/pwh19920920/butterfly-admin/src/app/config/sequence"
 	"gorm.io/gorm"
 )
 

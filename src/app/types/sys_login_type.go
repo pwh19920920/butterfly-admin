@@ -1,6 +1,6 @@
 package types
 
-import "butterfly-admin/src/app/domain/entity"
+import "github.com/pwh19920920/butterfly-admin/src/app/domain/entity"
 
 type LoginForm struct {
 	Username string `form:"username" binding:"required"`

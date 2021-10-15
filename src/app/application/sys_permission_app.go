@@ -1,9 +1,9 @@
 package application
 
 import (
-	"butterfly-admin/src/app/domain/entity"
-	"butterfly-admin/src/app/infrastructure/persistence"
 	"github.com/bwmarrin/snowflake"
+	"github.com/pwh19920920/butterfly-admin/src/app/domain/entity"
+	"github.com/pwh19920920/butterfly-admin/src/app/infrastructure/persistence"
 	"github.com/sirupsen/logrus"
 )
 

@@ -1,9 +1,9 @@
 package application
 
 import (
-	"butterfly-admin/src/app/config"
-	"butterfly-admin/src/app/domain/security"
-	"butterfly-admin/src/app/infrastructure/persistence"
+	"github.com/pwh19920920/butterfly-admin/src/app/config"
+	"github.com/pwh19920920/butterfly-admin/src/app/domain/security"
+	"github.com/pwh19920920/butterfly-admin/src/app/infrastructure/persistence"
 )
 
 type Application struct {

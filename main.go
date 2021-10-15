@@ -1,8 +1,8 @@
 package main
 
 import (
-	"butterfly-admin/src/app/starter"
 	"github.com/pwh19920920/butterfly"
+	"github.com/pwh19920920/butterfly-admin/src/app/starter"
 )
 
 func main() {
