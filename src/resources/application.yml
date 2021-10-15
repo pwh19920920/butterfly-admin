@@ -3,7 +3,23 @@ db:
 
 server:
   engineMode: 'release'
+  serverAddr: :8081
 
 auth:
   ignorePath:
-    - POST - /sys/login
+    - POST - /api/login
+    - POST - /run
+    - POST - /kill
+    - POST - /log
+  ignorePrefixPath:
+  commonPath:
+    - POST - /api/logout
+    - POST - /api/refresh
+    - GET - /api/currentUser
+
+influx:
+  addr: http://127.0.0.1:8086
+  database: monitor
+
+xxl:
+  accessToken: xxl

@@ -2,7 +2,6 @@ package interfaces
 
 import (
 	"butterfly-admin/src/app/application"
-	"butterfly-admin/src/app/common/constant"
 	"butterfly-admin/src/app/domain/entity"
 	"butterfly-admin/src/app/types"
 	"github.com/gin-gonic/gin"
@@ -11,71 +10,72 @@ import (
 )
 
 type sysUserHandler struct {
-	userApp application.SysUserApplication
+	sysUserApp application.SysUserApplication
 }
 
-// 登陆
-func (userHandler *sysUserHandler) login(context *gin.Context) {
-	var form types.LoginForm
-	if context.ShouldBindJSON(&form) != nil {
+// 查询
+func (handler *sysUserHandler) query(context *gin.Context) {
+	var sysUserQueryRequest types.SysUserQueryRequest
+	if context.ShouldBindQuery(&sysUserQueryRequest) != nil {
 		response.BuildResponseBadRequest(context, "请求参数有误")
 		return
 	}
 
 	// option
-	token, err := userHandler.userApp.Login(form.Username, form.Password)
+	total, data, err := handler.sysUserApp.Query(&sysUserQueryRequest)
 	if err != nil {
-		response.BuildResponseBadRequest(context, "用户名或者密码错误")
+		response.BuildResponseBadRequest(context, "请求发送错误")
 		return
 	}
 
 	// 输出
-	response.BuildResponseSuccess(context, token)
+	response.BuildPageResponseSuccess(context, sysUserQueryRequest.RequestPaging, total, data)
 }
 
-// 退出
-func (userHandler *sysUserHandler) logout(context *gin.Context) {
-	// 尝试获取ticket
-	dataStr := context.Request.Header.Get(constant.ContextUser)
-	token := entity.SysToken{}.UnMarshal(dataStr)
-
-	// 删除令牌
-	_ = userHandler.userApp.Logout(token.Subject)
-
-	// 输出
-	response.BuildResponseSuccess(context, token)
-}
-
-// 刷新令牌
-func (userHandler *sysUserHandler) refresh(context *gin.Context) {
-	// 尝试获取ticket
-	dataStr := context.Request.Header.Get(constant.ContextUser)
-	ticket := entity.SysToken{}.UnMarshal(dataStr)
-
-	// 取令牌
-	token := context.GetHeader(userHandler.userApp.GetHeaderName())
-	newToken, err := userHandler.userApp.RefreshToken(ticket.UserId, ticket.Subject, token)
-	if err != nil {
-		response.BuildResponseBadRequest(context, "刷新令牌失败")
+// 创建
+func (handler *sysUserHandler) create(context *gin.Context) {
+	var sysUser entity.SysUser
+	if context.ShouldBindJSON(&sysUser) != nil {
+		response.BuildResponseBadRequest(context, "请求参数有误")
 		return
 	}
 
-	// 删除令牌
-	_ = userHandler.userApp.Logout(ticket.Subject)
-
-	// 输出
-	response.BuildResponseSuccess(context, newToken)
+	// option
+	err := handler.sysUserApp.Create(&sysUser)
+	if err != nil {
+		response.BuildResponseBadRequest(context, "创建用户失败")
+		return
+	}
+	response.BuildResponseSuccess(context, "ok")
 }
 
-// 加载路由
+// 创建
+func (handler *sysUserHandler) modify(context *gin.Context) {
+	var sysUser entity.SysUser
+	if context.ShouldBindJSON(&sysUser) != nil {
+		response.BuildResponseBadRequest(context, "请求参数有误")
+		return
+	}
+
+	// option
+	err := handler.sysUserApp.Modify(&sysUser)
+	if err != nil {
+		response.BuildResponseBadRequest(context, "更新用户失败")
+		return
+	}
+
+	response.BuildResponseSuccess(context, "ok")
+}
+
+// InitSysUserHandler 加载路由
 func InitSysUserHandler(app *application.Application) {
 	// 组件初始化
 	handler := sysUserHandler{app.SysUser}
 
 	// 路由初始化
 	var route []server.RouteInfo
-	route = append(route, server.RouteInfo{HttpMethod: server.HttpPost, Path: "/login", HandlerFunc: handler.login})
-	route = append(route, server.RouteInfo{HttpMethod: server.HttpPost, Path: "/logout", HandlerFunc: handler.logout})
-	route = append(route, server.RouteInfo{HttpMethod: server.HttpPost, Path: "/refresh", HandlerFunc: handler.refresh})
-	server.RegisterRoute("/sys", route)
+	route = append(route, server.RouteInfo{HttpMethod: server.HttpGet, Path: "", HandlerFunc: handler.query})
+	route = append(route, server.RouteInfo{HttpMethod: server.HttpPost, Path: "", HandlerFunc: handler.create})
+	route = append(route, server.RouteInfo{HttpMethod: server.HttpPut, Path: "", HandlerFunc: handler.modify})
+	server.RegisterRoute("/api/sys/user", route)
 }

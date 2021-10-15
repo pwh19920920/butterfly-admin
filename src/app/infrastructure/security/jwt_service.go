@@ -1,7 +1,7 @@
 package security
 
 import (
-	"butterfly-admin/src/app/config"
+	"butterfly-admin/src/app/config/auth"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -18,8 +18,8 @@ func NewJwtServiceImpl() *JwtServiceImpl {
 	return &JwtServiceImpl{}
 }
 
-// 生成令牌
-func (jwtService *JwtServiceImpl) GenericToken(authConfig *config.AuthConfig, secret, subject string) (string, error) {
+// GenericToken 生成令牌
+func (jwtService *JwtServiceImpl) GenericToken(authConfig *auth.Config, secret, subject string) (string, error) {
 	jwtSecret := []byte(secret)
 
 	claims := jwt.StandardClaims{
@@ -37,7 +37,7 @@ func (jwtService *JwtServiceImpl) GenericToken(authConfig *config.AuthConfig, se
 	return tokenClaims.SignedString(jwtSecret)
 }
 
-// 获取Subject
+// GetSubjectFromToken 获取Subject
 func (jwtService *JwtServiceImpl) GetSubjectFromToken(token string) (string, error) {
 	startIndexDot := strings.Index(token, ".")
 	lastIndexDot := strings.LastIndex(token, ".")
@@ -63,7 +63,7 @@ func (jwtService *JwtServiceImpl) GetSubjectFromToken(token string) (string, err
 	return claims.Subject, nil
 }
 
-// 校验令牌
+// CheckToken 校验令牌
 func (jwtService *JwtServiceImpl) CheckToken(token, secret string) bool {
 	jwtSecret := []byte(secret)
 	tokenClaims, err := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {

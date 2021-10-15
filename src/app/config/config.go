@@ -1,15 +1,26 @@
 package config
 
-type DatabaseConfig struct {
-	Dsn                   string `yaml:"dsn"`
-	MaxIdleConnect        int    `yaml:"maxIdleConnect"`
-	MaxOpenConnect        int    `yaml:"maxOpenConnect"`
-	ConnMaxLifeTimeSecond int    `yaml:"connMaxLifeTimeSecond"`
+import (
+	"butterfly-admin/src/app/config/auth"
+	"butterfly-admin/src/app/config/database"
+	"butterfly-admin/src/app/config/sequence"
+	"github.com/bwmarrin/snowflake"
+	"gorm.io/gorm"
+)
+
+type Config struct {
+	DatabaseForGorm *gorm.DB        // 数据库
+	Sequence        *snowflake.Node // 数据库序列化工具
+	AuthConfig      *auth.Config    // 权限配置
 }
 
-type AuthConfig struct {
-	ExpireTime int      `yaml:"expireTime"`
-	HeaderName string   `yaml:"headerName"`
-	HeaderType string   `yaml:"headerType"`
-	IgnorePath []string `yaml:"ignorePath"`
+func InitAll() Config {
+	databaseForGorm := database.GetConn()
+	sequenceInstance := sequence.GetSequence()
+	authConfig := auth.GetAuthConf()
+	return Config{
+		databaseForGorm,
+		sequenceInstance,
+		authConfig,
+	}
 }

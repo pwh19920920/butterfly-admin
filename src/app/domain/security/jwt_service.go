@@ -1,14 +1,16 @@
 package security
 
-import "butterfly-admin/src/app/config"
+import (
+	"butterfly-admin/src/app/config/auth"
+)
 
-type JwtService interface {
-	// 生成令牌
-	GenericToken(authConfig *config.AuthConfig, secret, subject string) (string, error)
+type TokenService interface {
+	// GenericToken 生成令牌
+	GenericToken(authConfig *auth.Config, secret, subject string) (string, error)
 
-	// 获取Subject
+	// GetSubjectFromToken 获取Subject
 	GetSubjectFromToken(token string) (string, error)
 
-	// 校验令牌
+	// CheckToken 校验令牌
 	CheckToken(token, secret string) bool
 }

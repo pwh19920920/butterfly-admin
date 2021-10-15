@@ -1,22 +1,26 @@
 package persistence
 
 import (
+	"butterfly-admin/src/app/config"
 	"butterfly-admin/src/app/domain/repository"
-	"gorm.io/gorm"
 )
 
 type Repository struct {
-	SysUserRepository  repository.SysUserRepository
-	SysTokenRepository repository.SysTokenRepository
-	SysMenuRepository  repository.SysMenuRepository
-	db                 *gorm.DB
+	SysUserRepository       repository.SysUserRepository
+	SysTokenRepository      repository.SysTokenRepository
+	SysMenuRepository       repository.SysMenuRepository
+	SysRoleRepository       repository.SysRoleRepository
+	SysPermissionRepository repository.SysPermissionRepository
+	SysMenuOptionRepository repository.SysMenuOptionRepository
 }
 
-func NewRepository(db *gorm.DB) *Repository {
+func NewRepository(config config.Config) *Repository {
 	return &Repository{
-		db:                 db,
-		SysUserRepository:  NewSysUserRepositoryImpl(db),
-		SysTokenRepository: NewSysTokenRepositoryImpl(db),
-		SysMenuRepository:  NewSysMenuRepositoryImpl(db),
+		SysMenuOptionRepository: NewSysMenuOptionRepositoryImpl(config.DatabaseForGorm),
+		SysPermissionRepository: NewSysPermissionRepositoryImpl(config.DatabaseForGorm),
+		SysUserRepository:       NewSysUserRepositoryImpl(config.DatabaseForGorm),
+		SysTokenRepository:      NewSysTokenRepositoryImpl(config.DatabaseForGorm),
+		SysMenuRepository:       NewSysMenuRepositoryImpl(config.DatabaseForGorm),
+		SysRoleRepository:       NewSysRoleRepositoryImpl(config.DatabaseForGorm),
 	}
 }

@@ -4,34 +4,55 @@ import (
 	"butterfly-admin/src/app/config"
 	"butterfly-admin/src/app/domain/security"
 	"butterfly-admin/src/app/infrastructure/persistence"
-	"github.com/bwmarrin/snowflake"
 )
 
 type Application struct {
-	SysUser SysUserApplication
-	SysMenu SysMenuApplication
+	Login         LoginApplication
+	SysMenu       SysMenuApplication
+	SysUser       SysUserApplication
+	SysRole       SysRoleApplication
+	SysPermission SysPermissionApplication
 }
 
 func NewApplication(
-	sequence *snowflake.Node,
+	config config.Config,
 	repository *persistence.Repository,
 	encoderService security.EncodeService,
-	jwtService security.JwtService,
-	authConfig *config.AuthConfig,
+	tokenService security.TokenService,
 ) *Application {
 	return &Application{
 		// 用户服务
-		SysUser: SysUserApplication{
-			sequence:       sequence,
+		Login: LoginApplication{
+			sequence:       config.Sequence,
 			repository:     repository,
 			encoderService: encoderService,
-			jwtService:     jwtService,
-			authConfig:     authConfig,
+			tokenService:   tokenService,
+			authConfig:     config.AuthConfig,
 		},
 
 		// 菜单服务
 		SysMenu: SysMenuApplication{
-			sequence:   sequence,
+			sequence:   config.Sequence,
+			repository: repository,
+		},
+
+		SysUser: SysUserApplication{
+			sequence:       config.Sequence,
+			repository:     repository,
+			encoderService: encoderService,
+			tokenService:   tokenService,
+			authConfig:     config.AuthConfig,
+		},
+
+		// 角色
+		SysRole: SysRoleApplication{
+			sequence:   config.Sequence,
+			repository: repository,
+		},
+
+		// 权限
+		SysPermission: SysPermissionApplication{
+			sequence:   config.Sequence,
 			repository: repository,
 		},
 	}

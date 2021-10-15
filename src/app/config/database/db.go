@@ -1,7 +1,6 @@
 package database
 
 import (
-	conf "butterfly-admin/src/app/config"
 	"github.com/pwh19920920/butterfly/config"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -11,16 +10,27 @@ import (
 	"time"
 )
 
-type dbConf struct {
-	Db conf.DatabaseConfig `yaml:"db"`
+const defaultMaxIdleConnect = 10
+const defaultMaxOpenConnect = 100
+const defaultConnMaxLifeTimeSecond = 3600
+
+type Config struct {
+	Dsn                   string `yaml:"dsn"`                   // 数据库链接
+	MaxIdleConnect        int    `yaml:"maxIdleConnect"`        // 最大空闲时间
+	MaxOpenConnect        int    `yaml:"maxOpenConnect"`        // 最大连接时间
+	ConnMaxLifeTimeSecond int    `yaml:"connMaxLifeTimeSecond"` //
 }
 
-// 初始化db
+type dbConf struct {
+	Db Config `yaml:"db"`
+}
+
+// GetConn 初始化db
 func GetConn() *gorm.DB {
 	// 默认值
-	viper.SetDefault("db.maxIdleConnect", 10)
-	viper.SetDefault("db.maxOpenConnect", 100)
-	viper.SetDefault("db.ConnMaxLifeTimeSecond", 3600)
+	viper.SetDefault("db.maxIdleConnect", defaultMaxIdleConnect)
+	viper.SetDefault("db.maxOpenConnect", defaultMaxOpenConnect)
+	viper.SetDefault("db.ConnMaxLifeTimeSecond", defaultConnMaxLifeTimeSecond)
 
 	// 加载配置
 	databaseConf := new(dbConf)
@@ -32,7 +42,7 @@ func GetConn() *gorm.DB {
 	})
 
 	if err != nil || db == nil {
-		logrus.Panic("db connect open failure")
+		logrus.Error("db connect open failure")
 		return nil
 	}
 
@@ -42,7 +52,7 @@ func GetConn() *gorm.DB {
 	// 打开连接
 	sqlDB, err := db.DB()
 	if err != nil || sqlDB == nil {
-		logrus.Panic("db open failure")
+		logrus.Error("db open failure")
 		return nil
 	}
 
