@@ -10,6 +10,7 @@ type SysPermission struct {
 	Option      string `json:"option" gorm:"column:option"`           // 操作
 	Independent bool   `json:"independent" gorm:"column:independent"` // 是否独立
 	Half        bool   `json:"half" gorm:"half"`                      // 是否半选
+	Root        bool   `json:"root" gorm:"root"`                      // 是否根
 }
 
 // TableName 会将 User 的表名重写为 `profiles`
