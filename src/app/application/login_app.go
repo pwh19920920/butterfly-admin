@@ -21,6 +21,13 @@ var ignorePathMap = make(map[string]bool, 0)
 var ignorePrefixPaths = make([]string, 0)
 var commonPathMap = make(map[string]bool, 0)
 
+func init() {
+	ignorePathMap["POST - /api/login"] = true
+	commonPathMap["POST - /api/logout"] = true
+	commonPathMap["POST - /api/refresh"] = true
+	commonPathMap["GET - /api/currentUser"] = true
+}
+
 type LoginApplication struct {
 	sequence       *snowflake.Node
 	repository     *persistence.Repository
