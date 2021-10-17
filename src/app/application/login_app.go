@@ -20,6 +20,7 @@ import (
 var ignorePathMap = make(map[string]bool, 0)
 var ignorePrefixPaths = make([]string, 0)
 var commonPathMap = make(map[string]bool, 0)
+var initPath = false
 
 func init() {
 	ignorePathMap["POST - /api/login"] = true
@@ -110,7 +111,7 @@ func (application *LoginApplication) RefreshToken(userId int64, subject, token s
 // GetAuthConfigPaths 获取忽略auth的地址，获取普通过滤的地址
 func (application *LoginApplication) GetAuthConfigPaths() (ignorePathResultMap map[string]bool,
 	ignorePrefixResultPaths []string, commonPathResultMap map[string]bool) {
-	if len(ignorePathMap) == 0 {
+	if !initPath {
 		for _, v := range application.authConfig.IgnorePath {
 			ignorePathMap[v] = true
 		}
@@ -123,6 +124,8 @@ func (application *LoginApplication) GetAuthConfigPaths() (ignorePathResultMap m
 			commonPathMap[v] = true
 		}
 	}
+
+	initPath = true
 	return ignorePathMap, ignorePrefixPaths, commonPathMap
 }
 
