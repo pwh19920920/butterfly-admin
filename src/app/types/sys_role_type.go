@@ -1,6 +1,7 @@
 package types
 
 import (
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/pwh19920920/butterfly-admin/src/app/domain/entity"
 	"github.com/pwh19920920/butterfly/response"
 )
@@ -17,4 +18,17 @@ type SysRolePermissionQueryResponse struct {
 type SysRoleCreateRequest struct {
 	entity.SysRole
 	Permissions []entity.SysPermission `json:"permissions"`
+}
+
+func (req SysRoleCreateRequest) ValidateForCreate() error {
+	return validation.ValidateStruct(&req,
+		validation.Field(&req.Name, validation.Required, validation.Length(0, 255)),
+	)
+}
+
+func (req SysRoleCreateRequest) ValidateForModify() error {
+	return validation.ValidateStruct(&req,
+		validation.Field(&req.Name, validation.Required, validation.Length(0, 255)),
+		validation.Field(&req.Id, validation.Required),
+	)
 }

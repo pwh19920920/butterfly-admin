@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/pwh19920920/butterfly-admin/src/app/application"
 	"github.com/pwh19920920/butterfly-admin/src/app/types"
@@ -73,8 +74,14 @@ func (handler *sysRoleHandler) create(context *gin.Context) {
 		return
 	}
 
+	err := sysRoleCreateRequest.ValidateForCreate()
+	if err != nil {
+		response.BuildResponseBadRequest(context, fmt.Sprintf("请求参数有误: %v", err.Error()))
+		return
+	}
+
 	// option
-	err := handler.sysRoleApp.Create(&sysRoleCreateRequest)
+	err = handler.sysRoleApp.Create(&sysRoleCreateRequest)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "创建角色失败")
 		return
@@ -91,8 +98,14 @@ func (handler *sysRoleHandler) modify(context *gin.Context) {
 		return
 	}
 
+	err := sysRoleCreateRequest.ValidateForModify()
+	if err != nil {
+		response.BuildResponseBadRequest(context, fmt.Sprintf("请求参数有误: %v", err.Error()))
+		return
+	}
+
 	// option
-	err := handler.sysRoleApp.Modify(&sysRoleCreateRequest)
+	err = handler.sysRoleApp.Modify(&sysRoleCreateRequest)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "创建角色失败")
 		return

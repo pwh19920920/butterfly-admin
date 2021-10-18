@@ -1,10 +1,18 @@
 package types
 
 import "github.com/pwh19920920/butterfly-admin/src/app/domain/entity"
+import "github.com/go-ozzo/ozzo-validation/v4"
 
 type LoginForm struct {
-	Username string `form:"username" binding:"required"`
-	Password string `form:"password" binding:"required"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+func (req LoginForm) ValidateForLogin() error {
+	return validation.ValidateStruct(&req,
+		validation.Field(&req.Username, validation.Required, validation.Length(0, 255)),
+		validation.Field(&req.Password, validation.Required, validation.Length(0, 255)),
+	)
 }
 
 type SysMenuPermissionForUser struct {

@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/pwh19920920/butterfly-admin/src/app/application"
 	"github.com/pwh19920920/butterfly-admin/src/app/types"
@@ -47,8 +48,15 @@ func (handler *sysMenuHandler) create(context *gin.Context) {
 		return
 	}
 
+	// 数据校验
+	err := sysMenuCreateRequest.ValidateForCreate()
+	if err != nil {
+		response.BuildResponseBadRequest(context, fmt.Sprintf("请求参数有误: %v", err.Error()))
+		return
+	}
+
 	// option
-	err := handler.menuApp.Create(&sysMenuCreateRequest)
+	err = handler.menuApp.Create(&sysMenuCreateRequest)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "创建菜单失败")
 		return
@@ -63,6 +71,13 @@ func (handler *sysMenuHandler) update(context *gin.Context) {
 	err := context.ShouldBindJSON(&sysMenuCreateRequest)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "请求参数有误")
+		return
+	}
+
+	// 数据校验
+	err = sysMenuCreateRequest.ValidateForModify()
+	if err != nil {
+		response.BuildResponseBadRequest(context, fmt.Sprintf("请求参数有误: %v", err.Error()))
 		return
 	}
 

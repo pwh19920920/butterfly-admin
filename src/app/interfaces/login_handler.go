@@ -2,6 +2,7 @@ package interfaces
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/pwh19920920/butterfly-admin/src/app/application"
 	"github.com/pwh19920920/butterfly-admin/src/app/common/constant"
@@ -21,6 +22,13 @@ func (hd *loginHandler) login(context *gin.Context) {
 	var form types.LoginForm
 	if context.ShouldBindJSON(&form) != nil {
 		response.BuildResponseBadRequest(context, "请求参数有误")
+		return
+	}
+
+	// 数据校验
+	err := form.ValidateForLogin()
+	if err != nil {
+		response.BuildResponseBadRequest(context, fmt.Sprintf("请求参数有误: %v", err.Error()))
 		return
 	}
 
