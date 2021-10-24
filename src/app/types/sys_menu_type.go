@@ -29,7 +29,6 @@ func (req SysMenuCreateRequest) ValidateForCreate() error {
 		validation.Field(&req.Icon, validation.Required, validation.Length(0, 255)),
 		validation.Field(&req.Sort, validation.Required, validation.Max(9999)),
 		validation.Field(&req.Parent, validation.Required, validation.Min(0)),
-		validation.Field(&req.Route, validation.Required, validation.Length(0, 255)),
 	)
 }
 
@@ -41,7 +40,6 @@ func (req SysMenuCreateRequest) ValidateForModify() error {
 		validation.Field(&req.Icon, validation.Required, validation.Length(0, 255)),
 		validation.Field(&req.Sort, validation.Required, validation.Max(9999)),
 		validation.Field(&req.Parent, validation.Required, validation.Min(0)),
-		validation.Field(&req.Route, validation.Required, validation.Length(0, 255)),
 		validation.Field(&req.Id, validation.Required),
 	)
 }
