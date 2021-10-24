@@ -7,7 +7,7 @@ import (
 
 type SysMenuRepository interface {
 	// Save 保存
-	Save(menu *entity.SysMenu) error
+	Save(menu *entity.SysMenu, options *[]entity.SysMenuOption) error
 
 	// UpdateById 更新
 	UpdateById(id int64, menu *entity.SysMenu, options *[]entity.SysMenuOption) error

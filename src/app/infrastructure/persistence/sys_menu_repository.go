@@ -17,8 +17,16 @@ func NewSysMenuRepositoryImpl(db *gorm.DB) *SysMenuRepositoryImpl {
 }
 
 // Save 保存
-func (s *SysMenuRepositoryImpl) Save(menu *entity.SysMenu) error {
-	return s.db.Model(&entity.SysMenu{}).Create(&menu).Error
+func (s *SysMenuRepositoryImpl) Save(menu *entity.SysMenu, options *[]entity.SysMenuOption) error {
+	return s.db.Transaction(func(tx *gorm.DB) error {
+		if options != nil {
+			err := tx.Model(&entity.SysMenuOption{}).Create(options).Error
+			if err != nil {
+				return err
+			}
+		}
+		return tx.Model(&entity.SysMenu{}).Create(&menu).Error
+	})
 }
 
 // GetById 获取单条记录
@@ -54,11 +62,14 @@ func (s *SysMenuRepositoryImpl) UpdateEntityAndChildRouteById(id int64, oldRoute
 		}
 
 		// insert into on duplicate key update
-		err = tx.Model(&entity.SysMenuOption{}).Clauses(clause.OnConflict{
-			DoUpdates: clause.AssignmentColumns([]string{"deleted"}),
-		}).Create(options).Error
-		if err != nil {
-			return err
+		if options != nil && len(*options) > 0 {
+			// insert into on duplicate key update
+			err = tx.Model(&entity.SysMenuOption{}).Clauses(clause.OnConflict{
+				DoUpdates: clause.AssignmentColumns([]string{"deleted"}),
+			}).Create(options).Error
+			if err != nil {
+				return err
+			}
 		}
 
 		// UPDATE `config` SET `value`=REPLACE(`value`,'8080','8989') WHERE `value` LIKE '%8080%'

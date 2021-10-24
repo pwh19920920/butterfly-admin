@@ -111,9 +111,21 @@ func (application *SysMenuApplication) Create(request *types.SysMenuCreateReques
 		return err
 	}
 
+	// 对requestOption重新赋值, 程序是先删除, 后insert into on duplicate update
+	if request.Options != nil {
+		for index, option := range request.Options {
+			codeKey := fmt.Sprintf("%v-%v-%v-%v", option.MenuId, option.Value, option.Method, option.Path)
+			option.Id = sequence.GetSequence().Generate().Int64()
+			option.MenuId = menu.Id
+			option.Code = fmt.Sprintf("%x", md5.Sum([]byte(codeKey)))
+			option.Deleted = common.DeletedFalse
+			request.Options[index] = option
+		}
+	}
+
 	menu.Route = route
 
-	err = application.repository.SysMenuRepository.Save(&menu)
+	err = application.repository.SysMenuRepository.Save(&menu, &request.Options)
 
 	// 错误记录
 	if err != nil {
