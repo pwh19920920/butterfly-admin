@@ -32,7 +32,7 @@ func GetAuthConf() *Config {
 		viper.SetDefault("auth.headerType", defaultHeaderType)
 
 		// 加载配置
-		sysConf.LoadConf(&conf, sysConf.GetOptions().ConfigFilePath)
+		sysConf.LoadConf(&conf)
 	}
 	return &conf.Auth
 }

@@ -34,7 +34,7 @@ func GetConn() *gorm.DB {
 
 	// 加载配置
 	databaseConf := new(dbConf)
-	config.LoadConf(&databaseConf, config.GetOptions().ConfigFilePath)
+	config.LoadConf(&databaseConf)
 
 	// 创建连接
 	db, err := gorm.Open(mysql.Open(databaseConf.Db.Dsn), &gorm.Config{
