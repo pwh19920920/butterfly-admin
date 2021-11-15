@@ -9,7 +9,7 @@ require (
 	github.com/go-basic/uuid v1.0.0
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/google/uuid v1.1.2
-	github.com/pwh19920920/butterfly v1.0.5
+	github.com/pwh19920920/butterfly v1.0.6
 	github.com/sirupsen/logrus v1.7.0
 	github.com/spf13/viper v1.7.1
 	gorm.io/driver/mysql v1.0.3
