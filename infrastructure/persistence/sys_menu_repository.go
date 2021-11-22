@@ -19,7 +19,7 @@ func NewSysMenuRepositoryImpl(db *gorm.DB) *SysMenuRepositoryImpl {
 // Save 保存
 func (s *SysMenuRepositoryImpl) Save(menu *entity.SysMenu, options *[]entity.SysMenuOption) error {
 	return s.db.Transaction(func(tx *gorm.DB) error {
-		if options != nil {
+		if options != nil && len(*options) > 0 {
 			err := tx.Model(&entity.SysMenuOption{}).Create(options).Error
 			if err != nil {
 				return err
