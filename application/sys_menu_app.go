@@ -114,9 +114,9 @@ func (application *SysMenuApplication) Create(request *types.SysMenuCreateReques
 	// 对requestOption重新赋值, 程序是先删除, 后insert into on duplicate update
 	if request.Options != nil {
 		for index, option := range request.Options {
+			option.MenuId = menu.Id
 			codeKey := fmt.Sprintf("%v-%v-%v-%v", option.MenuId, option.Value, option.Method, option.Path)
 			option.Id = sequence.GetSequence().Generate().Int64()
-			option.MenuId = menu.Id
 			option.Code = fmt.Sprintf("%x", md5.Sum([]byte(codeKey)))
 			option.Deleted = common.DeletedFalse
 			request.Options[index] = option
@@ -159,9 +159,9 @@ func (application *SysMenuApplication) Modify(request *types.SysMenuCreateReques
 	// 对requestOption重新赋值, 程序是先删除, 后insert into on duplicate update
 	if request.Options != nil {
 		for index, option := range request.Options {
+			option.MenuId = request.Id
 			codeKey := fmt.Sprintf("%v-%v-%v-%v", option.MenuId, option.Value, option.Method, option.Path)
 			option.Id = sequence.GetSequence().Generate().Int64()
-			option.MenuId = request.Id
 			option.Code = fmt.Sprintf("%x", md5.Sum([]byte(codeKey)))
 			option.Deleted = common.DeletedFalse
 			request.Options[index] = option
