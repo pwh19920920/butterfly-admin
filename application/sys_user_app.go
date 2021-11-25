@@ -24,14 +24,7 @@ func (app *SysUserApplication) GetUserById(userId int64) (*entity.SysUser, error
 	return app.repository.SysUserRepository.GetById(userId)
 }
 
-func (app *SysUserApplication) Query(request *types.SysUserQueryRequest) (int64, []types.SysUserQueryResponse, error) {
-	total, data, err := app.repository.SysUserRepository.Select(request)
-	// 错误记录
-	if err != nil {
-		logrus.Error("SysUserRepository.Select() happen error for", err)
-		return total, nil, err
-	}
-
+func (app *SysUserApplication) coverQueryResult(data []entity.SysUser) []types.SysUserQueryResponse {
 	// 重新赋值
 	result := make([]types.SysUserQueryResponse, 0)
 	for _, item := range data {
@@ -46,9 +39,32 @@ func (app *SysUserApplication) Query(request *types.SysUserQueryRequest) (int64,
 			Roles:      item.Roles,
 			Username:   item.Username,
 			RoleList:   roleList,
+			Email:      item.Email,
+			Mobile:     item.Mobile,
 		})
 	}
+	return result
+}
+
+func (app *SysUserApplication) Query(request *types.SysUserQueryRequest) (int64, []types.SysUserQueryResponse, error) {
+	total, data, err := app.repository.SysUserRepository.Select(request)
+	// 错误记录
+	if err != nil {
+		logrus.Error("SysUserRepository.Select() happen error for", err)
+		return total, nil, err
+	}
+
+	// 重新赋值
+	result := app.coverQueryResult(data)
 	return total, result, err
+}
+
+// QueryAll 查询全部
+func (app *SysUserApplication) QueryAll() ([]types.SysUserQueryResponse, error) {
+	data, err := app.repository.SysUserRepository.SelectAll()
+	// 重新赋值
+	result := app.coverQueryResult(data)
+	return result, err
 }
 
 // Create 创建用户

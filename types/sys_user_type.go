@@ -18,4 +18,6 @@ type SysUserQueryResponse struct {
 	Username string   `json:"username"` // 用户
 	Roles    string   `json:"roles"`    // 角色串
 	RoleList []string `json:"roleList"` // 角色列表
+	Email    string   `json:"email"`    // 邮箱
+	Mobile   string   `json:"mobile"`   // 电话
 }

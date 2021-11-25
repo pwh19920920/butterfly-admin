@@ -15,6 +15,9 @@ type SysUserRepository interface {
 	// Select 分页查询用户
 	Select(request *types.SysUserQueryRequest) (int64, []entity.SysUser, error)
 
+	// SelectAll 查询全部
+	SelectAll() ([]entity.SysUser, error)
+
 	// Create 创建
 	Create(user *entity.SysUser) error
 

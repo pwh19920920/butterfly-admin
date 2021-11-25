@@ -13,6 +13,8 @@ type SysUser struct {
 	Password string `json:"password" gorm:"column:password"` // 密码
 	Salt     string `json:"salt" gorm:"column:salt"`         // 密码盐
 	Roles    string `json:"roles" gorm:"column:roles"`       // 角色串
+	Email    string `json:"email" gorm:"column:email"`       // 邮箱
+	Mobile   string `json:"mobile" gorm:"column:mobile"`     // 电话
 }
 
 // TableName 会将 User 的表名重写为 `profiles`

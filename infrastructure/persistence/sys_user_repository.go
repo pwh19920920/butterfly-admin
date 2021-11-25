@@ -52,6 +52,16 @@ func (repo *SysUserRepositoryImpl) Select(req *types.SysUserQueryRequest) (int64
 	return count, data, err
 }
 
+// SelectAll 查询全部
+func (repo *SysUserRepositoryImpl) SelectAll() ([]entity.SysUser, error) {
+	notCase := &entity.SysUser{BaseEntity: common.BaseEntity{Deleted: common.DeletedTrue}}
+
+	var data []entity.SysUser
+	err := repo.db.Model(&entity.SysUser{}).
+		Not(notCase).Find(&data).Error
+	return data, err
+}
+
 // Create 创建
 func (repo *SysUserRepositoryImpl) Create(user *entity.SysUser) error {
 	return repo.db.Model(&entity.SysUser{}).Create(&user).Error

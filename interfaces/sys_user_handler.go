@@ -32,6 +32,19 @@ func (handler *sysUserHandler) query(context *gin.Context) {
 	response.BuildPageResponseSuccess(context, sysUserQueryRequest.RequestPaging, total, data)
 }
 
+// 查询全部
+func (handler *sysUserHandler) queryAll(context *gin.Context) {
+	// option
+	data, err := handler.sysUserApp.QueryAll()
+	if err != nil {
+		response.BuildResponseBadRequest(context, "请求发送错误")
+		return
+	}
+
+	// 输出
+	response.BuildResponseSuccess(context, data)
+}
+
 // 创建
 func (handler *sysUserHandler) create(context *gin.Context) {
 	var sysUser entity.SysUser
@@ -77,5 +90,6 @@ func InitSysUserHandler(app *application.Application) {
 	route = append(route, server.RouteInfo{HttpMethod: server.HttpGet, Path: "", HandlerFunc: handler.query})
 	route = append(route, server.RouteInfo{HttpMethod: server.HttpPost, Path: "", HandlerFunc: handler.create})
 	route = append(route, server.RouteInfo{HttpMethod: server.HttpPut, Path: "", HandlerFunc: handler.modify})
+	route = append(route, server.RouteInfo{HttpMethod: server.HttpGet, Path: "/all", HandlerFunc: handler.queryAll})
 	server.RegisterRoute("/api/sys/user", route)
 }
