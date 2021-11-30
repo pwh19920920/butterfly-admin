@@ -1,6 +1,7 @@
 package database
 
 import (
+	"github.com/pwh19920920/butterfly-admin/common"
 	"github.com/pwh19920920/butterfly/config"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -39,6 +40,7 @@ func GetConn() *gorm.DB {
 	// 创建连接
 	db, err := gorm.Open(mysql.Open(databaseConf.Db.Dsn), &gorm.Config{
 		SkipDefaultTransaction: true,
+		Logger:                 common.NewGormLogger(),
 	})
 
 	if err != nil || db == nil {
@@ -47,7 +49,7 @@ func GetConn() *gorm.DB {
 	}
 
 	// 关闭sql log
-	db.Logger = logger.Default.LogMode(logger.Silent)
+	db.Logger.LogMode(logger.Silent)
 
 	// 打开连接
 	sqlDB, err := db.DB()

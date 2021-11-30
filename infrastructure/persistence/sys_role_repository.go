@@ -34,7 +34,7 @@ func (repo *SysRoleRepositoryImpl) UpdateById(id int64, permissions *[]entity.Sy
 		// 删除旧的权限
 		err := tx.Where(&entity.SysPermission{
 			RoleId: role.Id,
-		}).Delete(&entity.SysPermission{}).Error
+		}).Updates(&entity.SysPermission{BaseEntity: common.BaseEntity{Deleted: common.DeletedTrue}}).Error
 		if err != nil {
 			return err
 		}
