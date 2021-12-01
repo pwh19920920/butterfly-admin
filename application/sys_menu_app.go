@@ -58,16 +58,16 @@ func (application *SysMenuApplication) QueryForTree(withOption bool) ([]types.Sy
 	var menuMap = make(map[int64][]types.SysMenuTreeResponse, 0)
 	for _, item := range allMenus {
 		// 放数据到menuMap
-		menu, ok := menuMap[item.Parent]
+		menu, ok := menuMap[*item.Parent]
 		if !ok {
 			menu = make([]types.SysMenuTreeResponse, 0)
 		}
 
 		menu = append(menu, types.SysMenuTreeResponse{SysMenu: item})
-		menuMap[item.Parent] = menu
+		menuMap[*item.Parent] = menu
 
 		// 得到rootMenus
-		if item.Parent == 0 {
+		if *item.Parent == 0 {
 			rootMenus = append(rootMenus, types.SysMenuTreeResponse{SysMenu: item})
 		}
 	}
@@ -106,7 +106,7 @@ func (application *SysMenuApplication) Create(request *types.SysMenuCreateReques
 	menu := request.SysMenu
 	menu.Id = sequence.GetSequence().Generate().Int64()
 
-	route, err := application.getRoutePath(menu.Id, menu.Parent)
+	route, err := application.getRoutePath(menu.Id, *menu.Parent)
 	if err != nil {
 		return err
 	}
@@ -168,7 +168,7 @@ func (application *SysMenuApplication) Modify(request *types.SysMenuCreateReques
 		}
 	}
 
-	newRoute, err := application.getRoutePath(request.Id, request.Parent)
+	newRoute, err := application.getRoutePath(request.Id, *request.Parent)
 	if err != nil {
 		return err
 	}

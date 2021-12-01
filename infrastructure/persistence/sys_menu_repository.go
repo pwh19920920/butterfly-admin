@@ -156,7 +156,7 @@ func (s *SysMenuRepositoryImpl) CountByParent(parentId int64) (int64, error) {
 	var count int64 = 0
 	err := s.db.
 		Model(&entity.SysMenu{}).
-		Where(&entity.SysMenu{Parent: parentId}).
+		Where(&entity.SysMenu{Parent: &parentId}).
 		Not(&entity.SysMenu{BaseEntity: common.BaseEntity{Deleted: common.DeletedTrue}}).
 		Count(&count).Error
 	return count, err

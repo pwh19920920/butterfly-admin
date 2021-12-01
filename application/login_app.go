@@ -215,7 +215,7 @@ func (application *LoginApplication) GetUserMenuPermission(userId int64) (*types
 		menuCodes = append(menuCodes, item.Code)
 
 		// 放数据到menuMap
-		menu, ok := menuMap[item.Parent]
+		menu, ok := menuMap[*item.Parent]
 		if !ok {
 			menu = make([]types.SysMenuPermissionForUserMenu, 0)
 		}
@@ -227,10 +227,10 @@ func (application *LoginApplication) GetUserMenuPermission(userId int64) (*types
 			Path:      item.Path,
 			Name:      item.Code,
 		})
-		menuMap[item.Parent] = menu
+		menuMap[*item.Parent] = menu
 
 		// 得到rootMenus
-		if item.Parent == 0 {
+		if *item.Parent == 0 {
 			rootMenus = append(rootMenus, types.SysMenuPermissionForUserMenu{
 				Id:        item.Id,
 				Icon:      item.Icon,
