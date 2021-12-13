@@ -3,7 +3,7 @@ module github.com/pwh19920920/butterfly-admin
 go 1.13
 
 require (
-	github.com/bwmarrin/snowflake v0.3.0
+	github.com/pwh19920920/snowflake v0.3.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-basic/uuid v1.0.0
