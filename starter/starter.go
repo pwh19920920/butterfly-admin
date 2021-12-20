@@ -20,7 +20,7 @@ func route403(context *gin.Context) {
 	response.Response(context, 403, "您没有权限进行此操作", nil)
 }
 
-func InitButterflyAdmin() config.Config {
+func InitButterflyAdmin() (config.Config, *application.Application) {
 	// 初始化基本服务
 	allConfig := config.InitAll()
 	repository := persistence.NewRepository(allConfig)
@@ -45,5 +45,5 @@ func InitButterflyAdmin() config.Config {
 		route401,
 		route403,
 	))
-	return allConfig
+	return allConfig, app
 }

@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	_ = starter.InitButterflyAdmin()
+	_, _ = starter.InitButterflyAdmin()
 	butterfly.Run()
 }
