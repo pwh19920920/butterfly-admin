@@ -1,10 +1,10 @@
 package config
 
 import (
-	"github.com/bwmarrin/snowflake"
 	"github.com/pwh19920920/butterfly-admin/config/auth"
 	"github.com/pwh19920920/butterfly-admin/config/database"
 	"github.com/pwh19920920/butterfly-admin/config/sequence"
+	"github.com/pwh19920920/snowflake"
 	"gorm.io/gorm"
 )
 

@@ -3,7 +3,6 @@ package application
 import (
 	"errors"
 	"fmt"
-	"github.com/bwmarrin/snowflake"
 	"github.com/google/uuid"
 	"github.com/pwh19920920/butterfly-admin/config/auth"
 	"github.com/pwh19920920/butterfly-admin/domain/entity"
@@ -11,6 +10,7 @@ import (
 	"github.com/pwh19920920/butterfly-admin/infrastructure/persistence"
 	"github.com/pwh19920920/butterfly-admin/types"
 	"github.com/pwh19920920/butterfly/helper"
+	"github.com/pwh19920920/snowflake"
 	"github.com/sirupsen/logrus"
 	"strconv"
 	"strings"

@@ -1,7 +1,7 @@
 package sequence
 
 import "github.com/sirupsen/logrus"
-import "github.com/bwmarrin/snowflake"
+import "github.com/pwh19920920/snowflake"
 
 var flakeNode *snowflake.Node
 
