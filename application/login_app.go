@@ -14,6 +14,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 // 忽略的地址
@@ -21,6 +22,7 @@ var ignorePathMap = make(map[string]bool, 0)
 var ignorePrefixPaths = make([]string, 0)
 var commonPathMap = make(map[string]bool, 0)
 var initPath = false
+var lock sync.Mutex
 
 func init() {
 	ignorePathMap["POST - /api/login"] = true
@@ -112,6 +114,13 @@ func (application *LoginApplication) RefreshToken(userId int64, subject, token s
 func (application *LoginApplication) GetAuthConfigPaths() (ignorePathResultMap map[string]bool,
 	ignorePrefixResultPaths []string, commonPathResultMap map[string]bool) {
 	if !initPath {
+		// 二次校验
+		lock.Lock()
+		if initPath {
+			lock.Unlock()
+			return ignorePathMap, ignorePrefixPaths, commonPathMap
+		}
+
 		for _, v := range application.authConfig.IgnorePath {
 			ignorePathMap[v] = true
 		}
@@ -123,6 +132,9 @@ func (application *LoginApplication) GetAuthConfigPaths() (ignorePathResultMap m
 		for _, v := range application.authConfig.CommonPath {
 			commonPathMap[v] = true
 		}
+
+		// 一次释放锁
+		lock.Unlock()
 	}
 
 	initPath = true
