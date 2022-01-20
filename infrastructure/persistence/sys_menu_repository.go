@@ -116,10 +116,18 @@ func (s *SysMenuRepositoryImpl) UpdateById(id int64, menu *entity.SysMenu, optio
 
 // Delete 删除
 func (s *SysMenuRepositoryImpl) Delete(id int64) error {
-	err := s.db.Model(&entity.SysMenu{}).
-		Where(&entity.SysMenu{BaseEntity: common.BaseEntity{Id: id}}).
-		Updates(&entity.SysMenu{BaseEntity: common.BaseEntity{Deleted: common.DeletedTrue}}).Error
-	return err
+	return s.db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Model(&entity.SysMenu{}).
+			Where(&entity.SysMenu{BaseEntity: common.BaseEntity{Id: id}}).
+			Updates(&entity.SysMenu{BaseEntity: common.BaseEntity{Deleted: common.DeletedTrue}}).Error; err != nil {
+			return err
+		}
+
+		return tx.Model(&entity.SysMenuOption{}).
+			Where(&entity.SysMenuOption{MenuId: id}).
+			Updates(&entity.SysMenuOption{BaseEntity: common.BaseEntity{Deleted: common.DeletedTrue}}).Error
+	})
+
 }
 
 // Select 查询分页

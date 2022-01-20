@@ -9,3 +9,6 @@ auth:
   ignorePath:
   ignorePrefixPath:
   commonPath:
+    - GET - /api/sys/menu/withOption
+    - GET - /api/sys/role/all
+    - GET - /api/sys/user/all

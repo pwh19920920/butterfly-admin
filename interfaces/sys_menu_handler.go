@@ -103,7 +103,7 @@ func (handler *sysMenuHandler) delete(context *gin.Context) {
 	// option
 	err = handler.menuApp.Delete(id)
 	if err != nil {
-		response.BuildResponseBadRequest(context, "删除菜单失败")
+		response.BuildResponseBadRequest(context, "删除菜单失败:"+err.Error())
 		return
 	}
 

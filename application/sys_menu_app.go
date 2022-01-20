@@ -196,6 +196,16 @@ func (application *SysMenuApplication) Delete(request int64) error {
 	if count != 0 {
 		return errors.New("子菜单数量不为空, 不可删除")
 	}
+
+	count, err = application.repository.SysPermissionRepository.CountByMenuId(request)
+	if err != nil {
+		logrus.Error("SysPermissionRepository.CountByMenuId() happen error", err)
+		return err
+	}
+
+	if count != 0 {
+		return errors.New("相关权限不为空, 不可删除")
+	}
 	return application.repository.SysMenuRepository.Delete(request)
 }
 

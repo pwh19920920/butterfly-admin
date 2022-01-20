@@ -29,7 +29,16 @@ func (s *SysPermissionRepositoryImpl) SelectByRoleIds(roleIds []int64) ([]entity
 	var data []entity.SysPermission
 	err := s.db.Model(&entity.SysPermission{}).
 		Where("role_id in ?", roleIds).
-		Not(&entity.SysMenu{BaseEntity: common.BaseEntity{Deleted: common.DeletedTrue}}).
+		Not(&entity.SysPermission{BaseEntity: common.BaseEntity{Deleted: common.DeletedTrue}}).
 		Find(&data).Error
 	return data, err
+}
+
+func (s *SysPermissionRepositoryImpl) CountByMenuId(menuId int64) (int64, error) {
+	var count int64
+	err := s.db.Model(&entity.SysPermission{}).
+		Where("menu_id = ?", menuId).
+		Not(&entity.SysPermission{BaseEntity: common.BaseEntity{Deleted: common.DeletedTrue}}).
+		Count(&count).Error
+	return count, err
 }
