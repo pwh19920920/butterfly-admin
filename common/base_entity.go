@@ -3,7 +3,7 @@ package common
 type DeleteStatus int32
 
 const (
-	DeletedFalse DeleteStatus = 0
+	DeletedFalse DeleteStatus = 2
 	DeletedTrue  DeleteStatus = 1
 )
 

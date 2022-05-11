@@ -21,7 +21,7 @@ func (tokenRepository *SysTokenRepositoryImpl) Save(token entity.SysToken) error
 func (tokenRepository *SysTokenRepositoryImpl) Delete(subject string) error {
 	return tokenRepository.db.Model(&entity.SysToken{}).
 		Where(&entity.SysToken{Subject: subject}).
-		Updates(&entity.SysToken{BaseEntity: common.BaseEntity{Deleted: 1}}).Error
+		Updates(&entity.SysToken{BaseEntity: common.BaseEntity{Deleted: common.DeletedTrue}}).Error
 }
 
 func (tokenRepository *SysTokenRepositoryImpl) GetBySubject(subject string) (*entity.SysToken, error) {
