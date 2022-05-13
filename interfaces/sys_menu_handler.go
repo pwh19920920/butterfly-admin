@@ -129,6 +129,16 @@ func (handler *sysMenuHandler) option(context *gin.Context) {
 	response.BuildResponseSuccess(context, data)
 }
 
+func (handler *sysMenuHandler) refresh(context *gin.Context) {
+	// option
+	err := handler.menuApp.Refresh()
+	if err != nil {
+		response.BuildResponseBadRequest(context, "刷新失败")
+		return
+	}
+	response.BuildResponseSuccess(context, "ok")
+}
+
 // InitSysMenuHandler 加载路由
 func InitSysMenuHandler(app *application.Application) {
 	// 组件初始化
@@ -142,5 +152,6 @@ func InitSysMenuHandler(app *application.Application) {
 	route = append(route, server.RouteInfo{HttpMethod: server.HttpPost, Path: "", HandlerFunc: handler.create})
 	route = append(route, server.RouteInfo{HttpMethod: server.HttpPut, Path: "", HandlerFunc: handler.update})
 	route = append(route, server.RouteInfo{HttpMethod: server.HttpDelete, Path: "/:id", HandlerFunc: handler.delete})
+	route = append(route, server.RouteInfo{HttpMethod: server.HttpGet, Path: "/refresh", HandlerFunc: handler.refresh})
 	server.RegisterRoute("/api/sys/menu", route)
 }

@@ -45,3 +45,15 @@ func (repo *SysMenuOptionRepositoryImpl) SelectByIds(ids []int64) ([]entity.SysM
 		Find(&data).Error
 	return data, err
 }
+
+// BatchUpdate 批量更新
+func (repo *SysMenuOptionRepositoryImpl) BatchUpdate(options []entity.SysMenuOption) error {
+	return repo.db.Transaction(func(tx *gorm.DB) error {
+		for _, option := range options {
+			if err := tx.Updates(&option).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+}

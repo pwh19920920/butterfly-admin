@@ -14,4 +14,7 @@ type SysMenuOptionRepository interface {
 
 	// SelectByIds 批量查询
 	SelectByIds(ids []int64) ([]entity.SysMenuOption, error)
+
+	// BatchUpdate 批量更新
+	BatchUpdate(options []entity.SysMenuOption) error
 }

@@ -213,3 +213,19 @@ func (application *SysMenuApplication) Delete(request int64) error {
 func (application *SysMenuApplication) QueryOptionByMenuId(menuId int64) ([]entity.SysMenuOption, error) {
 	return application.repository.SysMenuOptionRepository.SelectByMenuId(menuId)
 }
+
+// Refresh 刷新
+func (application *SysMenuApplication) Refresh() error {
+	options, err := application.repository.SysMenuOptionRepository.SelectAll()
+	if err != nil {
+		logrus.Error("SysMenuOptionRepository.SelectAll() happen error", err)
+		return err
+	}
+
+	for index, option := range options {
+		codeKey := fmt.Sprintf("%v-%v-%v-%v", option.MenuId, option.Value, option.Method, option.Path)
+		option.Code = fmt.Sprintf("%x", md5.Sum([]byte(codeKey)))
+		options[index] = option
+	}
+	return application.repository.SysMenuOptionRepository.BatchUpdate(options)
+}
