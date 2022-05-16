@@ -22,7 +22,7 @@ func (t *LocalTime) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 
-	tt, err := time.Parse(fmt.Sprintf("\"%s\"", "2006-01-02 15:04:05"), string(data))
+	tt, err := time.Parse(fmt.Sprintf("\"%s\"", "2006-01-02 15:04:05 +0800 CST"), string(data))
 	*t = LocalTime{tt}
 	return err
 }

@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"errors"
 	"github.com/pwh19920920/butterfly-admin/common"
 	"github.com/pwh19920920/butterfly-admin/domain/entity"
 	"gorm.io/gorm"
@@ -26,6 +27,9 @@ func (tokenRepository *SysTokenRepositoryImpl) Delete(subject string) error {
 
 func (tokenRepository *SysTokenRepositoryImpl) GetBySubject(subject string) (*entity.SysToken, error) {
 	var token entity.SysToken
-	err := tokenRepository.db.Model(&entity.SysToken{}).Where(&entity.SysToken{Subject: subject}).Find(&token).Error
+	err := tokenRepository.db.Model(&entity.SysToken{}).Where(&entity.SysToken{Subject: subject}).First(&token).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
 	return &token, err
 }

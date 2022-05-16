@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"errors"
 	"github.com/pwh19920920/butterfly-admin/common"
 	"github.com/pwh19920920/butterfly-admin/domain/entity"
 	"github.com/pwh19920920/butterfly-admin/types"
@@ -34,7 +35,10 @@ func (s *SysMenuRepositoryImpl) GetById(id int64) (*entity.SysMenu, error) {
 	var data entity.SysMenu
 	err := s.db.Model(&entity.SysMenu{}).
 		Where(&entity.SysMenu{BaseEntity: common.BaseEntity{Id: id}}).
-		Find(&data).Error
+		First(&data).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
 	return &data, err
 }
 
