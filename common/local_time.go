@@ -22,7 +22,7 @@ func (t *LocalTime) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 
-	tt, err := time.Parse(fmt.Sprintf("\"%s\"", "2006-01-02 15:04:05"), string(data))
+	tt, err := time.ParseInLocation(fmt.Sprintf("\"%s\"", "2006-01-02 15:04:05"), string(data), time.Local)
 	*t = LocalTime{tt}
 	return err
 }
@@ -36,7 +36,10 @@ func (t LocalTime) Value() (driver.Value, error) {
 }
 
 func (t *LocalTime) Scan(v interface{}) error {
-	tTime, _ := time.Parse("2006-01-02 15:04:05 +0800 CST", v.(time.Time).String())
-	*t = LocalTime{Time: tTime}
-	return nil
+	value, ok := v.(time.Time)
+	if ok {
+		*t = LocalTime{Time: value}
+		return nil
+	}
+	return fmt.Errorf("can not convert %v to timestamp", v)
 }
