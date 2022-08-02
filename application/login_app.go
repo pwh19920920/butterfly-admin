@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
+	"github.com/pwh19920920/butterfly-admin/common"
 	"github.com/pwh19920920/butterfly-admin/config/auth"
 	"github.com/pwh19920920/butterfly-admin/domain/entity"
 	"github.com/pwh19920920/butterfly-admin/domain/security"
@@ -15,6 +16,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 // 忽略的地址
@@ -151,10 +153,12 @@ func (application *LoginApplication) genericToken(userId int64) (string, error) 
 	// subject -> userId
 	// subject -> secret
 	// userId -> subject
+	expireTime := time.Now().Add(time.Duration(application.authConfig.ExpireTime) * time.Second)
 	err := application.repository.SysTokenRepository.Save(entity.SysToken{
-		Secret:  secret,
-		Subject: subject,
-		UserId:  userId,
+		Secret:   secret,
+		Subject:  subject,
+		UserId:   userId,
+		ExpireAt: &common.LocalTime{Time: expireTime},
 	})
 
 	// 判定是否保存失败
@@ -164,7 +168,7 @@ func (application *LoginApplication) genericToken(userId int64) (string, error) 
 	}
 
 	// 生成令牌数据
-	return application.tokenService.GenericToken(application.authConfig, secret, subject)
+	return application.tokenService.GenericToken(application.authConfig, secret, subject, expireTime)
 }
 
 // 从header中解析令牌

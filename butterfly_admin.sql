@@ -141,6 +141,7 @@ CREATE TABLE `t_sys_token`  (
   `user_id` bigint(20) NOT NULL,
   `subject` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `expire_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 187 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统令牌表' ROW_FORMAT = Dynamic;
 

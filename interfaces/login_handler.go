@@ -20,8 +20,8 @@ type loginHandler struct {
 // 登陆
 func (hd *loginHandler) login(context *gin.Context) {
 	var form types.LoginForm
-	if context.ShouldBindJSON(&form) != nil {
-		response.BuildResponseBadRequest(context, "请求参数有误")
+	if err := context.ShouldBindJSON(&form); err != nil {
+		response.BuildResponseBadRequest(context, "请求参数有误:"+err.Error())
 		return
 	}
 
@@ -46,7 +46,7 @@ func (hd *loginHandler) login(context *gin.Context) {
 // 退出
 func (hd *loginHandler) logout(context *gin.Context) {
 	// 尝试获取ticket
-	ticket, err := getUserTicket(context)
+	ticket, err := GetUserTicket(context)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "请求数据有误")
 		return
@@ -62,7 +62,7 @@ func (hd *loginHandler) logout(context *gin.Context) {
 // 刷新令牌
 func (hd *loginHandler) refresh(context *gin.Context) {
 	// 尝试获取ticket
-	ticket, err := getUserTicket(context)
+	ticket, err := GetUserTicket(context)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "请求数据有误")
 		return
@@ -86,7 +86,7 @@ func (hd *loginHandler) refresh(context *gin.Context) {
 // 获取当前用户
 func (hd *loginHandler) currentUser(context *gin.Context) {
 	// 尝试获取ticket
-	ticket, err := getUserTicket(context)
+	ticket, err := GetUserTicket(context)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "请求数据有误")
 		return
@@ -114,8 +114,8 @@ func (hd *loginHandler) currentUser(context *gin.Context) {
 	response.BuildResponseSuccess(context, permission)
 }
 
-// 获取用户令牌
-func getUserTicket(context *gin.Context) (*entity.SysToken, error) {
+// GetUserTicket 获取用户令牌
+func GetUserTicket(context *gin.Context) (*entity.SysToken, error) {
 	// 尝试获取ticket
 	dataStr := context.Request.Header.Get(constant.ContextUser)
 	ticket, err := entity.SysToken{}.UnMarshal(dataStr)

@@ -19,7 +19,7 @@ func NewJwtServiceImpl() *JwtServiceImpl {
 }
 
 // GenericToken 生成令牌
-func (jwtService *JwtServiceImpl) GenericToken(authConfig *auth.Config, secret, subject string) (string, error) {
+func (jwtService *JwtServiceImpl) GenericToken(authConfig *auth.Config, secret, subject string, expireTime time.Time) (string, error) {
 	jwtSecret := []byte(secret)
 
 	claims := jwt.StandardClaims{
@@ -27,7 +27,7 @@ func (jwtService *JwtServiceImpl) GenericToken(authConfig *auth.Config, secret, 
 		IssuedAt: time.Now().Unix(),
 
 		// 过期时间
-		ExpiresAt: time.Now().Add(time.Duration(authConfig.ExpireTime) * time.Second).Unix(),
+		ExpiresAt: expireTime.Unix(),
 
 		// Subject
 		Subject: subject,

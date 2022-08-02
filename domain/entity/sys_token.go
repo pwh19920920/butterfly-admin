@@ -8,9 +8,10 @@ import (
 type SysToken struct {
 	common.BaseEntity
 
-	Secret  string `json:"secret" gorm:"column:secret"`         // 密钥
-	UserId  int64  `json:"userId,string" gorm:"column:user_id"` // 用户
-	Subject string `json:"subject" gorm:"column:subject"`       // subject
+	Secret   string            `json:"secret" gorm:"column:secret"`            // 密钥
+	UserId   int64             `json:"userId,string" gorm:"column:user_id"`    // 用户
+	Subject  string            `json:"subject" gorm:"column:subject"`          // subject
+	ExpireAt *common.LocalTime `json:"expireAt" gorm:"index;column:expire_at"` // 过期时间
 }
 
 // TableName 会将 User 的表名重写为 `profiles`
