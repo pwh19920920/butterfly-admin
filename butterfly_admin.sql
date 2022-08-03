@@ -174,6 +174,6 @@ CREATE TABLE `t_sys_user`  (
 -- ----------------------------
 -- Records of t_sys_user
 -- ----------------------------
-INSERT INTO `t_sys_user` VALUES (1, '2020-11-24 15:49:07', '2021-11-29 14:58:35', 'admin', '593d4632a8c70251d0e9be4b1799bcc1', '54099a65-a235-158c-d610-74d2ff4c789b', 0, '王小二', 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png', '1', 'pengweihuang@we.cn', '18650036719');
+INSERT INTO `t_sys_user` VALUES (1, '2020-11-24 15:49:07', '2021-11-29 14:58:35', 'admin', '593d4632a8c70251d0e9be4b1799bcc1', '54099a65-a235-158c-d610-74d2ff4c789b', 0, '王小二', 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png', '1', 'xxxxx', '11111111111');
 
 SET FOREIGN_KEY_CHECKS = 1;
