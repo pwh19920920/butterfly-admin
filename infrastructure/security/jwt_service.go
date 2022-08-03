@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/pwh19920920/butterfly-admin/config/auth"
 	"github.com/pwh19920920/butterfly/helper"
 	"strings"
 	"time"
@@ -19,7 +18,7 @@ func NewJwtServiceImpl() *JwtServiceImpl {
 }
 
 // GenericToken 生成令牌
-func (jwtService *JwtServiceImpl) GenericToken(authConfig *auth.Config, secret, subject string, expireTime time.Time) (string, error) {
+func (jwtService *JwtServiceImpl) GenericToken(secret, subject string, expireTime time.Time) (string, error) {
 	jwtSecret := []byte(secret)
 
 	claims := jwt.StandardClaims{

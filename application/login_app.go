@@ -168,7 +168,17 @@ func (application *LoginApplication) genericToken(userId int64) (string, error) 
 	}
 
 	// 生成令牌数据
-	return application.tokenService.GenericToken(application.authConfig, secret, subject, expireTime)
+	return application.tokenService.GenericToken(secret, subject, expireTime)
+}
+
+// GenericToken 暴露创建令牌
+func (application *LoginApplication) GenericToken(secret, subject string, expireTime time.Time) (string, error) {
+	return application.tokenService.GenericToken(secret, subject, expireTime)
+}
+
+// GetTokenBySubject 暴露获取令牌
+func (application *LoginApplication) GetTokenBySubject(subject string) (*entity.SysToken, error) {
+	return application.repository.SysTokenRepository.GetBySubject(subject)
 }
 
 // 从header中解析令牌
