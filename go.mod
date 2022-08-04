@@ -8,8 +8,7 @@ require (
 	github.com/go-basic/uuid v1.0.0
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/google/uuid v1.1.2
-	github.com/patrickmn/go-cache v2.1.0+incompatible
-	github.com/pwh19920920/butterfly v1.1.2
+	github.com/pwh19920920/butterfly v1.1.3
 	github.com/pwh19920920/snowflake v0.3.1
 	github.com/sirupsen/logrus v1.7.0
 	github.com/spf13/viper v1.7.1
