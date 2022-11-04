@@ -147,6 +147,10 @@ func (application *LoginApplication) SaveToken(token entity.SysToken) error {
 	return application.repository.SysTokenRepository.Save(token)
 }
 
+func (application *LoginApplication) ModifyToken(token entity.SysToken) error {
+	return application.repository.SysTokenRepository.Modify(token)
+}
+
 // 生成令牌
 func (application *LoginApplication) genericToken(userId int64) (string, error) {
 	// 生成保存密钥
