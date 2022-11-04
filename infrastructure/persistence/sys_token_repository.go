@@ -20,7 +20,7 @@ func (tokenRepository *SysTokenRepositoryImpl) Save(token entity.SysToken) error
 }
 
 func (tokenRepository *SysTokenRepositoryImpl) Modify(token entity.SysToken) error {
-	return tokenRepository.db.Model(&entity.SysToken{}).Updates(&token).Error
+	return tokenRepository.db.Model(&entity.SysToken{}).Updates(&token).Where(&entity.SysToken{Subject: token.Subject}).Error
 }
 
 func (tokenRepository *SysTokenRepositoryImpl) Delete(subject string) error {
