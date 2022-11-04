@@ -143,6 +143,10 @@ func (application *LoginApplication) GetAuthConfigPaths() (ignorePathResultMap m
 	return ignorePathMap, ignorePrefixPaths, commonPathMap
 }
 
+func (application *LoginApplication) SaveToken(token entity.SysToken) error {
+	return application.repository.SysTokenRepository.Save(token)
+}
+
 // 生成令牌
 func (application *LoginApplication) genericToken(userId int64) (string, error) {
 	// 生成保存密钥

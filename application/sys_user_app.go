@@ -24,6 +24,10 @@ func (app *SysUserApplication) GetUserById(userId int64) (*entity.SysUser, error
 	return app.repository.SysUserRepository.GetById(userId)
 }
 
+func (app *SysUserApplication) GetUserByUsername(username string) (*entity.SysUser, error) {
+	return app.repository.SysUserRepository.GetByUsername(username)
+}
+
 func (app *SysUserApplication) coverQueryResult(data []entity.SysUser) []types.SysUserQueryResponse {
 	// 重新赋值
 	result := make([]types.SysUserQueryResponse, 0)
