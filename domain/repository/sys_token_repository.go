@@ -8,8 +8,8 @@ type SysTokenRepository interface {
 	// Save 保存
 	Save(token entity.SysToken) error
 
-	// Modify 更新
-	Modify(token entity.SysToken) error
+	// ModifyById 更新
+	ModifyById(token entity.SysToken, id int64) error
 
 	// Delete 删除
 	Delete(subject string) error

@@ -19,8 +19,8 @@ func (tokenRepository *SysTokenRepositoryImpl) Save(token entity.SysToken) error
 	return tokenRepository.db.Model(&entity.SysToken{}).Create(&token).Error
 }
 
-func (tokenRepository *SysTokenRepositoryImpl) Modify(token entity.SysToken) error {
-	return tokenRepository.db.Model(&entity.SysToken{}).Where(&entity.SysToken{Subject: token.Subject}).Updates(&token).Error
+func (tokenRepository *SysTokenRepositoryImpl) ModifyById(token entity.SysToken, id int64) error {
+	return tokenRepository.db.Model(&entity.SysToken{}).Where(&entity.SysToken{BaseEntity: common.BaseEntity{Id: id}}).Updates(&token).Error
 }
 
 func (tokenRepository *SysTokenRepositoryImpl) Delete(subject string) error {
