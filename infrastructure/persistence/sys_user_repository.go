@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"errors"
 	"github.com/pwh19920920/butterfly-admin/common"
 	"github.com/pwh19920920/butterfly-admin/domain/entity"
 	"github.com/pwh19920920/butterfly-admin/types"
@@ -22,6 +23,9 @@ func (repo *SysUserRepositoryImpl) GetByUsername(username string) (*entity.SysUs
 		Where("username = ?", username).
 		Not(&entity.SysUser{BaseEntity: common.BaseEntity{Deleted: common.DeletedTrue}}).
 		First(&user).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
 	return &user, err
 }
 
@@ -32,6 +36,9 @@ func (repo *SysUserRepositoryImpl) GetById(id int64) (*entity.SysUser, error) {
 		Where("id = ?", id).
 		Not(&entity.SysUser{BaseEntity: common.BaseEntity{Deleted: common.DeletedTrue}}).
 		First(&user).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
 	return &user, err
 }
 
