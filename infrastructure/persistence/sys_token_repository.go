@@ -5,6 +5,7 @@ import (
 	"github.com/pwh19920920/butterfly-admin/common"
 	"github.com/pwh19920920/butterfly-admin/domain/entity"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type SysTokenRepositoryImpl struct {
@@ -16,7 +17,10 @@ func NewSysTokenRepositoryImpl(db *gorm.DB) *SysTokenRepositoryImpl {
 }
 
 func (tokenRepository *SysTokenRepositoryImpl) Save(token entity.SysToken) error {
-	return tokenRepository.db.Model(&entity.SysToken{}).Create(&token).Error
+	return tokenRepository.db.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "subject"}},
+		DoUpdates: clause.AssignmentColumns([]string{"secret", "user_id", "expire_at"}),
+	}).Create(&token).Error
 }
 
 func (tokenRepository *SysTokenRepositoryImpl) ModifyById(token entity.SysToken, id int64) error {
