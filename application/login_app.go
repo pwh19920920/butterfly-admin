@@ -148,7 +148,7 @@ func (application *LoginApplication) SaveToken(token entity.SysToken) error {
 }
 
 func (application *LoginApplication) ModifyToken(token entity.SysToken) error {
-	return application.repository.SysTokenRepository.Modify(token)
+	return application.repository.SysTokenRepository.ModifyById(token, token.Id)
 }
 
 // 生成令牌
