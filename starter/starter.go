@@ -8,8 +8,8 @@ import (
 	"github.com/pwh19920920/butterfly-admin/infrastructure/security"
 	"github.com/pwh19920920/butterfly-admin/interfaces"
 	"github.com/pwh19920920/butterfly-admin/interfaces/middleware"
-	"github.com/pwh19920920/butterfly/response"
-	"github.com/pwh19920920/butterfly/server"
+	"github.com/pwh19920920/butterfly/pkg/response"
+	"github.com/pwh19920920/butterfly/pkg/server"
 )
 
 func route401(context *gin.Context) {

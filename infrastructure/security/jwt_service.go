@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/pwh19920920/butterfly/helper"
+	"github.com/pwh19920920/butterfly/pkg/helper"
 	"strings"
 	"time"
 )

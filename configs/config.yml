@@ -3,11 +3,14 @@ db:
 
 server:
   engineMode: 'release'
-  serverAddr: :8081
+  serverAddr: :8088
+  methodOverride: true
+
 
 auth:
   ignorePath:
   ignorePrefixPath:
+    - GET - /api/sys/menu/refresh
   commonPath:
     - GET - /api/sys/menu/withOption
     - GET - /api/sys/role/all

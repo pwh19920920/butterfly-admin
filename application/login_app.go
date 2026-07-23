@@ -3,6 +3,7 @@ package application
 import (
 	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/pwh19920920/butterfly-admin/common"
 	"github.com/pwh19920920/butterfly-admin/config/auth"
@@ -10,7 +11,7 @@ import (
 	"github.com/pwh19920920/butterfly-admin/domain/security"
 	"github.com/pwh19920920/butterfly-admin/infrastructure/persistence"
 	"github.com/pwh19920920/butterfly-admin/types"
-	"github.com/pwh19920920/butterfly/helper"
+	"github.com/pwh19920920/butterfly/pkg/helper"
 	"github.com/pwh19920920/snowflake"
 	"github.com/sirupsen/logrus"
 	"strconv"
@@ -42,7 +43,7 @@ type LoginApplication struct {
 }
 
 // Logout 退出
-func (application *LoginApplication) Logout(subject string) error {
+func (application *LoginApplication) Logout(context *gin.Context, subject string) error {
 	return application.repository.SysTokenRepository.Delete(subject)
 }
 

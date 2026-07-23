@@ -2,7 +2,7 @@ package types
 
 import (
 	"github.com/pwh19920920/butterfly-admin/common"
-	"github.com/pwh19920920/butterfly/response"
+	"github.com/pwh19920920/butterfly/pkg/response"
 )
 
 type SysUserQueryRequest struct {

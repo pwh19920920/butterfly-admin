@@ -3,7 +3,7 @@ package common
 import (
 	"context"
 	"errors"
-	"github.com/pwh19920920/butterfly/logger"
+	"github.com/pwh19920920/butterfly/pkg/logger"
 	"time"
 
 	log "github.com/sirupsen/logrus"

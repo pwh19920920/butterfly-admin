@@ -4,13 +4,14 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/pwh19920920/butterfly-admin/common"
 	"github.com/pwh19920920/butterfly-admin/config/sequence"
 	"github.com/pwh19920920/butterfly-admin/domain/entity"
 	"github.com/pwh19920920/butterfly-admin/infrastructure/persistence"
 	"github.com/pwh19920920/butterfly-admin/types"
+	"github.com/pwh19920920/butterfly/pkg/logger"
 	"github.com/pwh19920920/snowflake"
-	"github.com/sirupsen/logrus"
 )
 
 type SysMenuApplication struct {
@@ -19,20 +20,20 @@ type SysMenuApplication struct {
 }
 
 // Query 分页查询
-func (application *SysMenuApplication) Query(request *types.SysMenuQueryRequest) (int64, []entity.SysMenu, error) {
+func (application *SysMenuApplication) Query(context *gin.Context, request *types.SysMenuQueryRequest) (int64, []entity.SysMenu, error) {
 	total, data, err := application.repository.SysMenuRepository.Select(request)
 
 	// 错误记录
 	if err != nil {
-		logrus.Error("SysMenuRepository.Select() happen error for", err)
+		logger.Error(context, "SysMenuRepository.Select() happen error for", err)
 	}
 	return total, data, err
 }
 
-func (application *SysMenuApplication) QueryForTree(withOption bool) ([]types.SysMenuTreeResponse, error) {
+func (application *SysMenuApplication) QueryForTree(context *gin.Context, withOption bool) ([]types.SysMenuTreeResponse, error) {
 	allMenus, err := application.repository.SysMenuRepository.SelectAll()
 	if err != nil {
-		logrus.Error("SysMenuRepository.SelectAll() happen error for", err)
+		logger.Error(context, "SysMenuRepository.SelectAll() happen error for", err)
 		return nil, err
 	}
 
@@ -102,7 +103,7 @@ func (application *SysMenuApplication) recursionAssignment(withOption bool, menu
 }
 
 // Create 创建菜单
-func (application *SysMenuApplication) Create(request *types.SysMenuCreateRequest) error {
+func (application *SysMenuApplication) Create(context *gin.Context, request *types.SysMenuCreateRequest) error {
 	menu := request.SysMenu
 	menu.Id = sequence.GetSequence().Generate().Int64()
 
@@ -129,7 +130,7 @@ func (application *SysMenuApplication) Create(request *types.SysMenuCreateReques
 
 	// 错误记录
 	if err != nil {
-		logrus.Error("SysMenuRepository.Save() happen error", err)
+		logger.Error(context, "SysMenuRepository.Save() happen error", err)
 	}
 	return err
 }
@@ -149,7 +150,7 @@ func (application *SysMenuApplication) getRoutePath(currentId, parentId int64) (
 }
 
 // Modify 更新
-func (application *SysMenuApplication) Modify(request *types.SysMenuCreateRequest) error {
+func (application *SysMenuApplication) Modify(context *gin.Context, request *types.SysMenuCreateRequest) error {
 	// 判断老菜单是否存在
 	oldMenu, err := application.repository.SysMenuRepository.GetById(request.Id)
 	if err != nil || oldMenu == nil {
@@ -186,10 +187,10 @@ func (application *SysMenuApplication) Modify(request *types.SysMenuCreateReques
 }
 
 // Delete 更新
-func (application *SysMenuApplication) Delete(request int64) error {
+func (application *SysMenuApplication) Delete(context *gin.Context, request int64) error {
 	count, err := application.repository.SysMenuRepository.CountByParent(request)
 	if err != nil {
-		logrus.Error("SysMenuRepository.CountByParent() happen error", err)
+		logger.Error(context, "SysMenuRepository.CountByParent() happen error", err)
 		return err
 	}
 
@@ -199,7 +200,7 @@ func (application *SysMenuApplication) Delete(request int64) error {
 
 	count, err = application.repository.SysPermissionRepository.CountByMenuId(request)
 	if err != nil {
-		logrus.Error("SysPermissionRepository.CountByMenuId() happen error", err)
+		logger.Error(context, "SysPermissionRepository.CountByMenuId() happen error", err)
 		return err
 	}
 
@@ -210,15 +211,15 @@ func (application *SysMenuApplication) Delete(request int64) error {
 }
 
 // QueryOptionByMenuId 查询菜单下的所有操作
-func (application *SysMenuApplication) QueryOptionByMenuId(menuId int64) ([]entity.SysMenuOption, error) {
+func (application *SysMenuApplication) QueryOptionByMenuId(context *gin.Context, menuId int64) ([]entity.SysMenuOption, error) {
 	return application.repository.SysMenuOptionRepository.SelectByMenuId(menuId)
 }
 
 // Refresh 刷新
-func (application *SysMenuApplication) Refresh() error {
+func (application *SysMenuApplication) Refresh(context *gin.Context) error {
 	options, err := application.repository.SysMenuOptionRepository.SelectAll()
 	if err != nil {
-		logrus.Error("SysMenuOptionRepository.SelectAll() happen error", err)
+		logger.Error(context, "SysMenuOptionRepository.SelectAll() happen error", err)
 		return err
 	}
 

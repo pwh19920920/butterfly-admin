@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pwh19920920/butterfly-admin/application"
 	"github.com/pwh19920920/butterfly-admin/types"
-	"github.com/pwh19920920/butterfly/response"
-	"github.com/pwh19920920/butterfly/server"
+	"github.com/pwh19920920/butterfly/pkg/response"
+	"github.com/pwh19920920/butterfly/pkg/server"
 	"strconv"
 )
 

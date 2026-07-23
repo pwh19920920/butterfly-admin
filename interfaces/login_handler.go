@@ -8,8 +8,8 @@ import (
 	"github.com/pwh19920920/butterfly-admin/common/constant"
 	"github.com/pwh19920920/butterfly-admin/domain/entity"
 	"github.com/pwh19920920/butterfly-admin/types"
-	"github.com/pwh19920920/butterfly/response"
-	"github.com/pwh19920920/butterfly/server"
+	"github.com/pwh19920920/butterfly/pkg/response"
+	"github.com/pwh19920920/butterfly/pkg/server"
 )
 
 type loginHandler struct {
@@ -53,7 +53,7 @@ func (hd *loginHandler) logout(context *gin.Context) {
 	}
 
 	// 删除令牌
-	_ = hd.loginApp.Logout(ticket.Subject)
+	_ = hd.loginApp.Logout(context, ticket.Subject)
 
 	// 输出
 	response.BuildResponseSuccess(context, nil)
@@ -77,7 +77,7 @@ func (hd *loginHandler) refresh(context *gin.Context) {
 	}
 
 	// 删除令牌
-	_ = hd.loginApp.Logout(ticket.Subject)
+	_ = hd.loginApp.Logout(nil, ticket.Subject)
 
 	// 输出
 	response.BuildResponseSuccess(context, newToken)

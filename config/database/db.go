@@ -2,7 +2,7 @@ package database
 
 import (
 	"github.com/pwh19920920/butterfly-admin/common"
-	"github.com/pwh19920920/butterfly/config"
+	"github.com/pwh19920920/butterfly/pkg/config"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"

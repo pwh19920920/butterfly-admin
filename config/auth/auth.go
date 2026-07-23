@@ -1,7 +1,7 @@
 package auth
 
 import (
-	sysConf "github.com/pwh19920920/butterfly/config"
+	sysConf "github.com/pwh19920920/butterfly/pkg/config"
 	"github.com/spf13/viper"
 )
 

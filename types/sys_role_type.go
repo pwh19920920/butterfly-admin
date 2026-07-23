@@ -3,7 +3,7 @@ package types
 import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/pwh19920920/butterfly-admin/domain/entity"
-	"github.com/pwh19920920/butterfly/response"
+	"github.com/pwh19920920/butterfly/pkg/response"
 )
 
 type SysRoleQueryRequest struct {

@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pwh19920920/butterfly-admin/application"
 	"github.com/pwh19920920/butterfly-admin/types"
-	"github.com/pwh19920920/butterfly/response"
-	"github.com/pwh19920920/butterfly/server"
+	"github.com/pwh19920920/butterfly/pkg/response"
+	"github.com/pwh19920920/butterfly/pkg/server"
 	"strconv"
 )
 
@@ -17,7 +17,7 @@ type sysMenuHandler struct {
 // 查询
 func (handler *sysMenuHandler) queryWithoutOption(context *gin.Context) {
 	// option
-	data, err := handler.menuApp.QueryForTree(false)
+	data, err := handler.menuApp.QueryForTree(context, false)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "查询菜单出错")
 		return
@@ -30,7 +30,7 @@ func (handler *sysMenuHandler) queryWithoutOption(context *gin.Context) {
 // 查询带op
 func (handler *sysMenuHandler) queryWithOption(context *gin.Context) {
 	// option
-	data, err := handler.menuApp.QueryForTree(true)
+	data, err := handler.menuApp.QueryForTree(context, true)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "查询菜单出错")
 		return
@@ -56,7 +56,7 @@ func (handler *sysMenuHandler) create(context *gin.Context) {
 	}
 
 	// option
-	err = handler.menuApp.Create(&sysMenuCreateRequest)
+	err = handler.menuApp.Create(context, &sysMenuCreateRequest)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "创建菜单失败")
 		return
@@ -82,7 +82,7 @@ func (handler *sysMenuHandler) update(context *gin.Context) {
 	}
 
 	// option
-	err = handler.menuApp.Modify(&sysMenuCreateRequest)
+	err = handler.menuApp.Modify(context, &sysMenuCreateRequest)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "更新菜单失败")
 		return
@@ -101,7 +101,7 @@ func (handler *sysMenuHandler) delete(context *gin.Context) {
 	}
 
 	// option
-	err = handler.menuApp.Delete(id)
+	err = handler.menuApp.Delete(context, id)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "删除菜单失败:"+err.Error())
 		return
@@ -120,7 +120,7 @@ func (handler *sysMenuHandler) option(context *gin.Context) {
 	}
 
 	// option
-	data, err := handler.menuApp.QueryOptionByMenuId(id)
+	data, err := handler.menuApp.QueryOptionByMenuId(context, id)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "获取操作失败")
 		return
@@ -131,7 +131,7 @@ func (handler *sysMenuHandler) option(context *gin.Context) {
 
 func (handler *sysMenuHandler) refresh(context *gin.Context) {
 	// option
-	err := handler.menuApp.Refresh()
+	err := handler.menuApp.Refresh(context)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "刷新失败")
 		return
