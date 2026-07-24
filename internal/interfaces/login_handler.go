@@ -33,7 +33,7 @@ func (hd *loginHandler) login(context *gin.Context) {
 	}
 
 	// option
-	token, err := hd.loginApp.Login(form.Username, form.Password)
+	token, err := hd.loginApp.Login(context, form.Username, form.Password)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "用户名或者密码错误")
 		return
@@ -69,15 +69,15 @@ func (hd *loginHandler) refresh(context *gin.Context) {
 	}
 
 	// 取令牌
-	token := context.GetHeader(hd.loginApp.GetHeaderName())
-	newToken, err := hd.loginApp.RefreshToken(ticket.UserId, ticket.Subject, token)
+	token := context.GetHeader(hd.loginApp.GetHeaderName(context))
+	newToken, err := hd.loginApp.RefreshToken(context, ticket.UserId, ticket.Subject, token)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "刷新令牌失败")
 		return
 	}
 
 	// 删除令牌
-	_ = hd.loginApp.Logout(nil, ticket.Subject)
+	_ = hd.loginApp.Logout(context, ticket.Subject)
 
 	// 输出
 	response.BuildResponseSuccess(context, newToken)
@@ -92,7 +92,7 @@ func (hd *loginHandler) currentUser(context *gin.Context) {
 		return
 	}
 
-	user, err := hd.sysUserApp.GetUserById(ticket.UserId)
+	user, err := hd.sysUserApp.GetUserById(context, ticket.UserId)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "请求数据有误")
 		return
@@ -104,7 +104,7 @@ func (hd *loginHandler) currentUser(context *gin.Context) {
 
 	// 用户id, 获取全部角色
 	// 通过角色获取全部菜单并集, 生成菜单树
-	permission, err := hd.loginApp.GetUserMenuPermission(ticket.UserId)
+	permission, err := hd.loginApp.GetUserMenuPermission(context, ticket.UserId)
 	if err != nil {
 		response.BuildResponseSuccess(context, user)
 		return

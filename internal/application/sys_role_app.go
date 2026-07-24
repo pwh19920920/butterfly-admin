@@ -1,11 +1,12 @@
 package application
 
 import (
+	"context"
 	"strings"
 
 	"github.com/pwh19920920/butterfly-admin/internal/domain/entity"
 	"github.com/pwh19920920/butterfly-admin/internal/types"
-	"github.com/sirupsen/logrus"
+	"github.com/pwh19920920/butterfly/pkg/logger"
 )
 
 type SysRoleApplication struct {
@@ -13,31 +14,31 @@ type SysRoleApplication struct {
 }
 
 // Query 分页查询
-func (application *SysRoleApplication) Query(request *types.SysRoleQueryRequest) (int64, []entity.SysRole, error) {
+func (application *SysRoleApplication) Query(ctx context.Context, request *types.SysRoleQueryRequest) (int64, []entity.SysRole, error) {
 	total, data, err := application.repository.SysRoleRepository.Select(request)
 	// 错误记录
 	if err != nil {
-		logrus.Error("SysMenuRepository.Select() happen error for", err)
+		logger.Error(ctx, "SysMenuRepository.Select() happen error for", err)
 		return total, nil, err
 	}
 	return total, data, err
 }
 
-func (application *SysRoleApplication) SelectAll() ([]entity.SysRole, error) {
+func (application *SysRoleApplication) SelectAll(ctx context.Context) ([]entity.SysRole, error) {
 	data, err := application.repository.SysRoleRepository.SelectAll()
 	// 错误记录
 	if err != nil {
-		logrus.Error("SysMenuRepository.Select() happen error for", err)
+		logger.Error(ctx, "SysMenuRepository.Select() happen error for", err)
 	}
 	return data, err
 }
 
 // QueryPermissionByRoleId 查询
-func (application *SysRoleApplication) QueryPermissionByRoleId(roleId int64) ([]types.SysRolePermissionQueryResponse, error) {
+func (application *SysRoleApplication) QueryPermissionByRoleId(ctx context.Context, roleId int64) ([]types.SysRolePermissionQueryResponse, error) {
 	data, err := application.repository.SysPermissionRepository.SelectByRoleId(roleId)
 	// 错误记录
 	if err != nil {
-		logrus.Error("SysPermissionRepository.SelectByRoleId() happen error for", err)
+		logger.Error(ctx, "SysPermissionRepository.SelectByRoleId() happen error for", err)
 		return nil, err
 	}
 
@@ -53,7 +54,7 @@ func (application *SysRoleApplication) QueryPermissionByRoleId(roleId int64) ([]
 }
 
 // Create 创建
-func (application *SysRoleApplication) Create(request *types.SysRoleCreateRequest) error {
+func (application *SysRoleApplication) Create(ctx context.Context, request *types.SysRoleCreateRequest) error {
 	role := request.SysRole
 	role.Id = application.sequence.Generate().Int64()
 
@@ -68,7 +69,7 @@ func (application *SysRoleApplication) Create(request *types.SysRoleCreateReques
 }
 
 // Modify 创建
-func (application *SysRoleApplication) Modify(request *types.SysRoleCreateRequest) error {
+func (application *SysRoleApplication) Modify(ctx context.Context, request *types.SysRoleCreateRequest) error {
 	role := request.SysRole
 	if request.Permissions != nil {
 		for index, permission := range request.Permissions {
@@ -80,6 +81,6 @@ func (application *SysRoleApplication) Modify(request *types.SysRoleCreateReques
 }
 
 // Delete 更新
-func (application *SysRoleApplication) Delete(request int64) error {
+func (application *SysRoleApplication) Delete(ctx context.Context, request int64) error {
 	return application.repository.SysRoleRepository.Delete(request)
 }

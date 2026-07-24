@@ -1,6 +1,7 @@
 package application
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strconv"
@@ -8,13 +9,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/pwh19920920/butterfly-admin/internal/common"
 	"github.com/pwh19920920/butterfly-admin/internal/domain/entity"
 	"github.com/pwh19920920/butterfly-admin/internal/types"
 	"github.com/pwh19920920/butterfly/pkg/helper"
-	"github.com/sirupsen/logrus"
+	"github.com/pwh19920920/butterfly/pkg/logger"
 )
 
 // 忽略的地址
@@ -36,12 +36,12 @@ type LoginApplication struct {
 }
 
 // Logout 退出
-func (application *LoginApplication) Logout(context *gin.Context, subject string) error {
+func (application *LoginApplication) Logout(ctx context.Context, subject string) error {
 	return application.repository.SysTokenRepository.Delete(subject)
 }
 
 // Login 登陆
-func (application *LoginApplication) Login(username, password string) (ticket string, err error) {
+func (application *LoginApplication) Login(ctx context.Context, username, password string) (ticket string, err error) {
 	user, err := application.repository.SysUserRepository.GetByUsername(username)
 	if err != nil || user == nil {
 		return "", errors.New("用户不存在或者获取失败")
@@ -54,16 +54,16 @@ func (application *LoginApplication) Login(username, password string) (ticket st
 	}
 
 	// 生成令牌数据
-	return application.genericToken(user.Id)
+	return application.genericToken(ctx, user.Id)
 }
 
 // GetHeaderName 获取配置名称
-func (application *LoginApplication) GetHeaderName() string {
+func (application *LoginApplication) GetHeaderName(ctx context.Context) string {
 	return application.authConfig.HeaderName
 }
 
 // CheckAndGetTicket 检查并获取用户id
-func (application *LoginApplication) CheckAndGetTicket(token string) (*entity.SysToken, error) {
+func (application *LoginApplication) CheckAndGetTicket(ctx context.Context, token string) (*entity.SysToken, error) {
 	// 取出票据id
 	token, err := application.parseToken(token)
 	if err != nil {
@@ -95,7 +95,7 @@ func (application *LoginApplication) CheckAndGetTicket(token string) (*entity.Sy
 }
 
 // RefreshToken 刷新令牌
-func (application *LoginApplication) RefreshToken(userId int64, subject, token string) (string, error) {
+func (application *LoginApplication) RefreshToken(ctx context.Context, userId int64, subject, token string) (string, error) {
 	// 取出票据id
 	token, err := application.parseToken(token)
 	if err != nil {
@@ -103,11 +103,11 @@ func (application *LoginApplication) RefreshToken(userId int64, subject, token s
 	}
 
 	// 生成令牌数据
-	return application.genericToken(userId)
+	return application.genericToken(ctx, userId)
 }
 
 // GetAuthConfigPaths 获取忽略auth的地址，获取普通过滤的地址
-func (application *LoginApplication) GetAuthConfigPaths() (ignorePathResultMap map[string]bool,
+func (application *LoginApplication) GetAuthConfigPaths(ctx context.Context) (ignorePathResultMap map[string]bool,
 	ignorePrefixResultPaths []string, commonPathResultMap map[string]bool) {
 	if !initPath {
 		// 二次校验
@@ -137,16 +137,16 @@ func (application *LoginApplication) GetAuthConfigPaths() (ignorePathResultMap m
 	return ignorePathMap, ignorePrefixPaths, commonPathMap
 }
 
-func (application *LoginApplication) SaveToken(token entity.SysToken) error {
+func (application *LoginApplication) SaveToken(ctx context.Context, token entity.SysToken) error {
 	return application.repository.SysTokenRepository.Save(token)
 }
 
-func (application *LoginApplication) ModifyToken(token entity.SysToken) error {
+func (application *LoginApplication) ModifyToken(ctx context.Context, token entity.SysToken) error {
 	return application.repository.SysTokenRepository.ModifyById(token, token.Id)
 }
 
 // 生成令牌
-func (application *LoginApplication) genericToken(userId int64) (string, error) {
+func (application *LoginApplication) genericToken(ctx context.Context, userId int64) (string, error) {
 	// 生成保存密钥
 	secret := uuid.New().String()
 	subject := uuid.New().String()
@@ -165,7 +165,7 @@ func (application *LoginApplication) genericToken(userId int64) (string, error) 
 
 	// 判定是否保存失败
 	if err != nil {
-		logrus.Error(err)
+		logger.Error(ctx, err)
 		return "", errors.New("密钥保存失败")
 	}
 
@@ -174,12 +174,12 @@ func (application *LoginApplication) genericToken(userId int64) (string, error) 
 }
 
 // GenericToken 暴露创建令牌
-func (application *LoginApplication) GenericToken(secret, subject string, expireTime time.Time) (string, error) {
+func (application *LoginApplication) GenericToken(ctx context.Context, secret, subject string, expireTime time.Time) (string, error) {
 	return application.tokenService.GenericToken(secret, subject, expireTime)
 }
 
 // GetTokenBySubject 暴露获取令牌
-func (application *LoginApplication) GetTokenBySubject(subject string) (*entity.SysToken, error) {
+func (application *LoginApplication) GetTokenBySubject(ctx context.Context, subject string) (*entity.SysToken, error) {
 	return application.repository.SysTokenRepository.GetBySubject(subject)
 }
 
@@ -197,8 +197,8 @@ func (application *LoginApplication) parseToken(token string) (string, error) {
 }
 
 // GetUserMenuPermission 用户菜单权限
-func (application *LoginApplication) GetUserMenuPermission(userId int64) (*types.SysMenuPermissionForUser, error) {
-	sysPermissions, err := application.GetUserSysPermission(userId)
+func (application *LoginApplication) GetUserMenuPermission(ctx context.Context, userId int64) (*types.SysMenuPermissionForUser, error) {
+	sysPermissions, err := application.GetUserSysPermission(ctx, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -289,9 +289,9 @@ func (application *LoginApplication) GetUserMenuPermission(userId int64) (*types
 }
 
 // GetUserMenuUrl 获取用户拥有的权限路径
-func (application *LoginApplication) GetUserMenuUrl(userId int64) (map[string]bool, error) {
+func (application *LoginApplication) GetUserMenuUrl(ctx context.Context, userId int64) (map[string]bool, error) {
 	specMap := make(map[string]bool, 0)
-	options, err := application.GetUserSysMenuOption(userId)
+	options, err := application.GetUserSysMenuOption(ctx, userId)
 	if err != nil {
 		return specMap, err
 	}
@@ -304,8 +304,8 @@ func (application *LoginApplication) GetUserMenuUrl(userId int64) (map[string]bo
 }
 
 // GetUserSysMenuOption 获取用户拥有的路径
-func (application *LoginApplication) GetUserSysMenuOption(userId int64) ([]entity.SysMenuOption, error) {
-	sysPermissions, err := application.GetUserSysPermission(userId)
+func (application *LoginApplication) GetUserSysMenuOption(ctx context.Context, userId int64) ([]entity.SysMenuOption, error) {
+	sysPermissions, err := application.GetUserSysPermission(ctx, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -332,7 +332,7 @@ func (application *LoginApplication) GetUserSysMenuOption(userId int64) ([]entit
 }
 
 // GetUserSysPermission 获取用户所拥有的权限列表
-func (application *LoginApplication) GetUserSysPermission(userId int64) ([]entity.SysPermission, error) {
+func (application *LoginApplication) GetUserSysPermission(ctx context.Context, userId int64) ([]entity.SysPermission, error) {
 	sysUser, err := application.repository.SysUserRepository.GetById(userId)
 	if err != nil {
 		return nil, err

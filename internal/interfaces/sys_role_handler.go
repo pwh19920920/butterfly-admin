@@ -23,7 +23,7 @@ func (handler *sysRoleHandler) query(context *gin.Context) {
 	}
 
 	// option
-	total, data, err := handler.sysRoleApp.Query(&sysRoleQueryRequest)
+	total, data, err := handler.sysRoleApp.Query(context, &sysRoleQueryRequest)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "请求发送错误")
 		return
@@ -36,7 +36,7 @@ func (handler *sysRoleHandler) query(context *gin.Context) {
 // 查询
 func (handler *sysRoleHandler) queryAll(context *gin.Context) {
 	// option
-	data, err := handler.sysRoleApp.SelectAll()
+	data, err := handler.sysRoleApp.SelectAll(context)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "请求发送错误")
 		return
@@ -56,7 +56,7 @@ func (handler *sysRoleHandler) queryByRoleId(context *gin.Context) {
 	}
 
 	// option
-	data, err := handler.sysRoleApp.QueryPermissionByRoleId(id)
+	data, err := handler.sysRoleApp.QueryPermissionByRoleId(context, id)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "查询权限出错")
 		return
@@ -81,7 +81,7 @@ func (handler *sysRoleHandler) create(context *gin.Context) {
 	}
 
 	// option
-	err = handler.sysRoleApp.Create(&sysRoleCreateRequest)
+	err = handler.sysRoleApp.Create(context, &sysRoleCreateRequest)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "创建角色失败")
 		return
@@ -105,7 +105,7 @@ func (handler *sysRoleHandler) modify(context *gin.Context) {
 	}
 
 	// option
-	err = handler.sysRoleApp.Modify(&sysRoleCreateRequest)
+	err = handler.sysRoleApp.Modify(context, &sysRoleCreateRequest)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "创建角色失败")
 		return
@@ -124,7 +124,7 @@ func (handler *sysRoleHandler) delete(context *gin.Context) {
 	}
 
 	// option
-	err = handler.sysRoleApp.Delete(id)
+	err = handler.sysRoleApp.Delete(context, id)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "删除角色失败")
 		return

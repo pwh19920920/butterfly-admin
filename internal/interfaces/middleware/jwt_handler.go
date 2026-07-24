@@ -20,7 +20,7 @@ func JwtAuth(app *application.Application, routeFor401 gin.HandlerFunc, routeFor
 		urlFullKey := fmt.Sprintf("%s - %s", context.Request.Method, context.FullPath())
 
 		// 先判断前缀过滤
-		ignorePaths, ignorePrefixPaths, commonPathMap := app.Login.GetAuthConfigPaths()
+		ignorePaths, ignorePrefixPaths, commonPathMap := app.Login.GetAuthConfigPaths(context)
 		if ignorePrefixPaths != nil && len(ignorePrefixPaths) > 0 {
 			for _, path := range ignorePrefixPaths {
 				if strings.HasPrefix(urlFullKey, path) {
@@ -38,8 +38,8 @@ func JwtAuth(app *application.Application, routeFor401 gin.HandlerFunc, routeFor
 		}
 
 		// 不被忽略则判断是否有令牌
-		token := context.GetHeader(app.Login.GetHeaderName())
-		ticket, err := app.Login.CheckAndGetTicket(token)
+		token := context.GetHeader(app.Login.GetHeaderName(context))
+		ticket, err := app.Login.CheckAndGetTicket(context, token)
 		if err != nil {
 			routeFor401(context)
 			context.Abort()
@@ -56,7 +56,7 @@ func JwtAuth(app *application.Application, routeFor401 gin.HandlerFunc, routeFor
 		}
 
 		// 特殊权限校验
-		specUserPermission, err := app.Login.GetUserMenuUrl(ticket.UserId)
+		specUserPermission, err := app.Login.GetUserMenuUrl(context, ticket.UserId)
 		if err != nil {
 			routeFor403(context)
 			context.Abort()

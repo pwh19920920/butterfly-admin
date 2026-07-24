@@ -22,7 +22,7 @@ func (handler *sysUserHandler) query(context *gin.Context) {
 	}
 
 	// option
-	total, data, err := handler.sysUserApp.Query(&sysUserQueryRequest)
+	total, data, err := handler.sysUserApp.Query(context, &sysUserQueryRequest)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "请求发送错误")
 		return
@@ -35,7 +35,7 @@ func (handler *sysUserHandler) query(context *gin.Context) {
 // 查询全部
 func (handler *sysUserHandler) queryAll(context *gin.Context) {
 	// option
-	data, err := handler.sysUserApp.QueryAll()
+	data, err := handler.sysUserApp.QueryAll(context)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "请求发送错误")
 		return
@@ -54,7 +54,7 @@ func (handler *sysUserHandler) create(context *gin.Context) {
 	}
 
 	// option
-	err := handler.sysUserApp.Create(&sysUser)
+	err := handler.sysUserApp.Create(context, &sysUser)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "创建用户失败")
 		return
@@ -71,7 +71,7 @@ func (handler *sysUserHandler) modify(context *gin.Context) {
 	}
 
 	// option
-	err := handler.sysUserApp.Modify(&sysUser)
+	err := handler.sysUserApp.Modify(context, &sysUser)
 	if err != nil {
 		response.BuildResponseBadRequest(context, "更新用户失败")
 		return
