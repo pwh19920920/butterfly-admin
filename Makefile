@@ -1,5 +1,5 @@
 APP := butterfly-admin
-CMD_DIR := ./cmd/butterfly-admin
+CMD_DIR := ./cmd
 BIN_DIR := bin
 
 .PHONY: build run vet fmt tidy vendor test docker clean

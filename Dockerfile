@@ -12,7 +12,7 @@ COPY vendor/ ./vendor/
 COPY . .
 
 # 静态构建，使用 vendor
-RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -o /out/butterfly-admin ./cmd/butterfly-admin
+RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -o /out/butterfly-admin ./cmd
 
 # ===== Stage 2: runtime =====
 FROM alpine:latest
