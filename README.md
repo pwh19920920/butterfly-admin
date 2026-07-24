@@ -3,6 +3,43 @@
 Go 语言后台管理系统，基于 Gin 框架和 GORM ORM，采用 DDD（领域驱动设计）架构风格。
 提供用户认证、菜单管理、角色权限等功能。
 
+## 相关项目
+
+| 项目 | 说明 | 地址 |
+|------|------|------|
+| butterfly | 基础框架库（Gin 封装） | https://github.com/pwh19920920/butterfly |
+| butterfly-admin | 后端 API 服务（本仓库） | https://github.com/pwh19920920/butterfly-admin |
+| butterfly-admin-web | 前端管理界面 | https://github.com/pwh19920920/butterfly-admin-web |
+
+## 界面预览
+
+
+### 登录
+
+![登录](docs/images/login.png)
+
+### 欢迎页
+
+![欢迎页](docs/images/welcome.png)
+
+### 用户管理
+
+![用户管理](docs/images/user.png)
+
+![用户编辑](docs/images/user_edit.png)
+
+### 角色管理
+
+![角色管理](docs/images/role.png)
+
+![角色编辑](docs/images/role_edit.png)
+
+### 菜单管理
+
+![菜单管理](docs/images/menu.png)
+
+![菜单编辑](docs/images/menu_edit.png)
+
 ## 技术栈
 
 - **语言**: Go 1.26
@@ -17,7 +54,7 @@ Go 语言后台管理系统，基于 Gin 框架和 GORM ORM，采用 DDD（领�
 
 ```
 butterfly-admin/
-├── cmd/butterfly-admin/         # 程序入口
+├── cmd/                         # 程序入口
 │   └── main.go
 ├── internal/                    # 私有代码（internal 强制封装，禁止外部模块引用）
 │   ├── starter/                 # 启动器与路由注册
@@ -66,7 +103,7 @@ butterfly-admin/
 
 ```bash
 # 在项目根目录执行
-go run ./cmd/butterfly-admin
+go run ./cmd
 ```
 
 ### 构建后运行
@@ -81,7 +118,7 @@ make build                     # 产出 bin/butterfly-admin
 框架支持 `--configFilePath` flag（默认 `configs/config.yml`）：
 
 ```bash
-go run ./cmd/butterfly-admin --configFilePath=path/to/your-config.yml
+go run ./cmd --configFilePath=path/to/your-config.yml
 ```
 
 ## Makefile 常用目标
