@@ -2,10 +2,11 @@ package middleware
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/pwh19920920/butterfly-admin/internal/application"
 	"github.com/pwh19920920/butterfly-admin/internal/common/constant"
-	"strings"
 )
 
 func JwtAuth(app *application.Application, routeFor401 gin.HandlerFunc, routeFor403 gin.HandlerFunc) gin.HandlerFunc {
