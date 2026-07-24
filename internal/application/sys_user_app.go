@@ -1,23 +1,16 @@
 package application
 
 import (
-	"github.com/go-basic/uuid"
-	"github.com/pwh19920920/butterfly-admin/internal/config/auth"
-	"github.com/pwh19920920/butterfly-admin/internal/domain/entity"
-	"github.com/pwh19920920/butterfly-admin/internal/domain/security"
-	"github.com/pwh19920920/butterfly-admin/internal/infrastructure/persistence"
-	"github.com/pwh19920920/butterfly-admin/internal/types"
-	"github.com/pwh19920920/snowflake"
-	"github.com/sirupsen/logrus"
 	"strings"
+
+	"github.com/go-basic/uuid"
+	"github.com/pwh19920920/butterfly-admin/internal/domain/entity"
+	"github.com/pwh19920920/butterfly-admin/internal/types"
+	"github.com/sirupsen/logrus"
 )
 
 type SysUserApplication struct {
-	sequence       *snowflake.Node
-	repository     *persistence.Repository
-	encoderService security.EncodeService
-	tokenService   security.TokenService
-	authConfig     *auth.Config
+	baseApp
 }
 
 func (app *SysUserApplication) GetUserById(userId int64) (*entity.SysUser, error) {

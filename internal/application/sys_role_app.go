@@ -1,18 +1,15 @@
 package application
 
 import (
-	"github.com/pwh19920920/butterfly-admin/internal/config/sequence"
-	"github.com/pwh19920920/butterfly-admin/internal/domain/entity"
-	"github.com/pwh19920920/butterfly-admin/internal/infrastructure/persistence"
-	"github.com/pwh19920920/butterfly-admin/internal/types"
-	"github.com/pwh19920920/snowflake"
-	"github.com/sirupsen/logrus"
 	"strings"
+
+	"github.com/pwh19920920/butterfly-admin/internal/domain/entity"
+	"github.com/pwh19920920/butterfly-admin/internal/types"
+	"github.com/sirupsen/logrus"
 )
 
 type SysRoleApplication struct {
-	sequence   *snowflake.Node
-	repository *persistence.Repository
+	baseApp
 }
 
 // Query 分页查询
@@ -58,11 +55,11 @@ func (application *SysRoleApplication) QueryPermissionByRoleId(roleId int64) ([]
 // Create 创建
 func (application *SysRoleApplication) Create(request *types.SysRoleCreateRequest) error {
 	role := request.SysRole
-	role.Id = sequence.GetSequence().Generate().Int64()
+	role.Id = application.sequence.Generate().Int64()
 
 	if request.Permissions != nil {
 		for index, permission := range request.Permissions {
-			permission.Id = sequence.GetSequence().Generate().Int64()
+			permission.Id = application.sequence.Generate().Int64()
 			permission.RoleId = role.Id
 			request.Permissions[index] = permission
 		}
@@ -75,7 +72,7 @@ func (application *SysRoleApplication) Modify(request *types.SysRoleCreateReques
 	role := request.SysRole
 	if request.Permissions != nil {
 		for index, permission := range request.Permissions {
-			permission.Id = sequence.GetSequence().Generate().Int64()
+			permission.Id = application.sequence.Generate().Int64()
 			request.Permissions[index] = permission
 		}
 	}

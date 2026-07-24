@@ -3,21 +3,18 @@ package application
 import (
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
-	"github.com/pwh19920920/butterfly-admin/internal/common"
-	"github.com/pwh19920920/butterfly-admin/internal/config/auth"
-	"github.com/pwh19920920/butterfly-admin/internal/domain/entity"
-	"github.com/pwh19920920/butterfly-admin/internal/domain/security"
-	"github.com/pwh19920920/butterfly-admin/internal/infrastructure/persistence"
-	"github.com/pwh19920920/butterfly-admin/internal/types"
-	"github.com/pwh19920920/butterfly/pkg/helper"
-	"github.com/pwh19920920/snowflake"
-	"github.com/sirupsen/logrus"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"github.com/pwh19920920/butterfly-admin/internal/common"
+	"github.com/pwh19920920/butterfly-admin/internal/domain/entity"
+	"github.com/pwh19920920/butterfly-admin/internal/types"
+	"github.com/pwh19920920/butterfly/pkg/helper"
+	"github.com/sirupsen/logrus"
 )
 
 // 忽略的地址
@@ -35,11 +32,7 @@ func init() {
 }
 
 type LoginApplication struct {
-	sequence       *snowflake.Node
-	repository     *persistence.Repository
-	encoderService security.EncodeService
-	tokenService   security.TokenService
-	authConfig     *auth.Config
+	baseApp
 }
 
 // Logout 退出

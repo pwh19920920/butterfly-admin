@@ -4,19 +4,16 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/pwh19920920/butterfly-admin/internal/common"
-	"github.com/pwh19920920/butterfly-admin/internal/config/sequence"
 	"github.com/pwh19920920/butterfly-admin/internal/domain/entity"
-	"github.com/pwh19920920/butterfly-admin/internal/infrastructure/persistence"
 	"github.com/pwh19920920/butterfly-admin/internal/types"
 	"github.com/pwh19920920/butterfly/pkg/logger"
-	"github.com/pwh19920920/snowflake"
 )
 
 type SysMenuApplication struct {
-	sequence   *snowflake.Node
-	repository *persistence.Repository
+	baseApp
 }
 
 // Query 分页查询
@@ -105,7 +102,7 @@ func (application *SysMenuApplication) recursionAssignment(withOption bool, menu
 // Create 创建菜单
 func (application *SysMenuApplication) Create(context *gin.Context, request *types.SysMenuCreateRequest) error {
 	menu := request.SysMenu
-	menu.Id = sequence.GetSequence().Generate().Int64()
+	menu.Id = application.sequence.Generate().Int64()
 
 	route, err := application.getRoutePath(menu.Id, *menu.Parent)
 	if err != nil {
@@ -117,7 +114,7 @@ func (application *SysMenuApplication) Create(context *gin.Context, request *typ
 		for index, option := range request.Options {
 			option.MenuId = menu.Id
 			codeKey := fmt.Sprintf("%v-%v-%v-%v", option.MenuId, option.Value, option.Method, option.Path)
-			option.Id = sequence.GetSequence().Generate().Int64()
+			option.Id = application.sequence.Generate().Int64()
 			option.Code = fmt.Sprintf("%x", md5.Sum([]byte(codeKey)))
 			option.Deleted = common.DeletedFalse
 			request.Options[index] = option
@@ -162,7 +159,7 @@ func (application *SysMenuApplication) Modify(context *gin.Context, request *typ
 		for index, option := range request.Options {
 			option.MenuId = request.Id
 			codeKey := fmt.Sprintf("%v-%v-%v-%v", option.MenuId, option.Value, option.Method, option.Path)
-			option.Id = sequence.GetSequence().Generate().Int64()
+			option.Id = application.sequence.Generate().Int64()
 			option.Code = fmt.Sprintf("%x", md5.Sum([]byte(codeKey)))
 			option.Deleted = common.DeletedFalse
 			request.Options[index] = option

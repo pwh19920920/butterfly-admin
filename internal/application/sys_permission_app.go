@@ -2,14 +2,11 @@ package application
 
 import (
 	"github.com/pwh19920920/butterfly-admin/internal/domain/entity"
-	"github.com/pwh19920920/butterfly-admin/internal/infrastructure/persistence"
-	"github.com/pwh19920920/snowflake"
 	"github.com/sirupsen/logrus"
 )
 
 type SysPermissionApplication struct {
-	sequence   *snowflake.Node
-	repository *persistence.Repository
+	baseApp
 }
 
 // Query 分页查询
